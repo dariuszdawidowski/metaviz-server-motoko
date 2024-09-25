@@ -12,7 +12,7 @@ class Icon extends Component {
     }
 
     init() {
-        this.on('sidebar:icon:click', 'click', () => {
+        this.on('dashboard:sidebar:click', 'click', () => {
             this.url(this.element.dataset.url);
         });
     }

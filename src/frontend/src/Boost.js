@@ -1,6 +1,6 @@
 /**
  * Boost rendering and events framework for JavaScript
- * v 0.3.3
+ * v 0.3.4
  */
 
 export class App {
@@ -14,19 +14,22 @@ export class App {
         this.listeners = {};
 
         // Init event
-        document.addEventListener('DOMContentLoaded', this.init.bind(this), {once: true});
+        document.addEventListener(
+            'DOMContentLoaded',
+            () => {
+                this.init();
+                window.dispatchEvent(new Event('urlchange'));
+            },
+            {once: true}
+        );
 
         // URL router
-        window.addEventListener('urlchange', event => {
-            const newurl = new URL(window.location.href)
-            const newparams = {};
-            for (const [key, value] of newurl.searchParams.entries()) newparams[key] = value;
-            this.router(newurl.pathname, newparams);
+        window.addEventListener('urlchange', () => {
+            const url = new URL(window.location.href)
+            const params = {};
+            for (const [key, value] of url.searchParams.entries()) params[key] = value;
+            this.router(url.pathname, params);
         });
-        const url = new URL(window.location.href)
-        const params = {};
-        for (const [key, value] of url.searchParams.entries()) params[key] = value;
-        this.router(url.pathname, params);
     }
 
     init() {
@@ -39,6 +42,22 @@ export class App {
 
     router(path, params) {
         /*** OVERLOAD ***/
+    }
+
+    on(pattern) {
+        const regexPattern = new RegExp('^' + pattern.replace(/\*/g, '.*') + '$');
+        const matches = Object.keys(this.listeners).filter(key => regexPattern.test(key));
+        mathes.forEach(match => {
+            this.listeners[match].element.addEventListener(this.listeners[match].type, this.listeners[match].fn);
+        });
+    }
+
+    off(pattern) {
+        const regexPattern = new RegExp('^' + pattern.replace(/\*/g, '.*') + '$');
+        const matches = Object.keys(this.listeners).filter(key => regexPattern.test(key));
+        mathes.forEach(match => {
+            this.listeners[match].element.removeEventListener(this.listeners[match].type, this.listeners[match].fn);
+        });
     }
 
 }
@@ -80,17 +99,13 @@ export class Component {
     }
 
     on(id, type, fn) {
-        this.app.listeners[id] = {type, fn: fn.bind(this), active: true};
+        this.app.listeners[id] = {type, fn: fn.bind(this), element: this.element, active: true};
         this.element.addEventListener(type, this.app.listeners[id].fn);
     }
 
     off(id) {
-        const regexPattern = new RegExp('^' + pattern.replace(/\*/g, '.*') + '$');
-        const matches = Object.keys(this.app.listeners).filter(key => regexPattern.test(key));
-        mathes.forEach(match => {
-            this.element.removeEventListener(this.app.listeners[match].type, this.app.listeners[match].fn);
-            delete this.app.listeners[id];
-        });
+        this.element.removeEventListener(this.app.listeners[id].type, this.app.listeners[id].fn);
+        delete this.app.listeners[id];
     }
 
     url(path) {
