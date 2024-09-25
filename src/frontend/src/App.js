@@ -1,5 +1,5 @@
 import { html, render } from 'lit-html';
-import { metaviz_server_motoko_backend } from 'declarations/backend';
+import { backend } from 'declarations/backend';
 import logo from './logo2.svg';
 
 class App {
@@ -12,7 +12,7 @@ class App {
   #handleSubmit = async (e) => {
     e.preventDefault();
     const name = document.getElementById('name').value;
-    this.greeting = await metaviz_server_motoko_backend.greet(name);
+    this.greeting = await backend.greet(name);
     this.#render();
   };
 
