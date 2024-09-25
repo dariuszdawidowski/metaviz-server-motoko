@@ -5,7 +5,7 @@ import { Sidebar } from 'frontend/src/panels/Sidebar.js';
 export default class MetavizApp extends App {
 
     init() {
-    	this.sidebar = new Sidebar();
+    	this.sidebar = new Sidebar(this);
     	this.append(this.sidebar);
     }
 

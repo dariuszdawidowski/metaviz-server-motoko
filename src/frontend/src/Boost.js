@@ -1,6 +1,6 @@
 /**
  * Boost rendering and events framework for JavaScript
- * v 0.3.1
+ * v 0.3.3
  */
 
 export class App {
@@ -9,6 +9,9 @@ export class App {
 
         // Main element
         this.element = document.querySelector(selector);
+
+        // Event manager
+        this.listeners = {};
 
         // Init event
         document.addEventListener('DOMContentLoaded', this.init.bind(this), {once: true});
@@ -42,13 +45,13 @@ export class App {
 
 export class Component {
 
-    constructor(selector = null) {
+    constructor(app, selector = null) {
+
+        // Main app reference
+        this.app = app;
 
         // Main element
         this.element = selector ? document.querySelector(selector) : document.createElement('div');
-
-        // Event manager
-        this.listeners = {};
 
         // Changes observer
         const observer = new MutationObserver(async () => {
@@ -77,15 +80,17 @@ export class Component {
     }
 
     on(id, type, fn) {
-        this.listeners[id] = {type, fn, active: true};
-        this.element.addEventListener(type, fn);
+        this.app.listeners[id] = {type, fn: fn.bind(this), active: true};
+        this.element.addEventListener(type, this.app.listeners[id].fn);
     }
 
     off(id) {
-        if (id in this.listeners) {
-            this.element.removeEventListener(this.listeners[id].type, this.listeners[id].fn);
-            delete this.listeners[id];
-        }
+        const regexPattern = new RegExp('^' + pattern.replace(/\*/g, '.*') + '$');
+        const matches = Object.keys(this.app.listeners).filter(key => regexPattern.test(key));
+        mathes.forEach(match => {
+            this.element.removeEventListener(this.app.listeners[match].type, this.app.listeners[match].fn);
+            delete this.app.listeners[id];
+        });
     }
 
     url(path) {
