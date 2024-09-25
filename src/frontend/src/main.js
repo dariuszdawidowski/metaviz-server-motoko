@@ -1,4 +1,4 @@
-import App from './App';
+import MetavizApp from './App';
 import './index.scss';
 
-const app = new App();
+const app = new MetavizApp('#app');

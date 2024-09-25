@@ -1,40 +1,26 @@
-import { html, render } from 'lit-html';
 import { backend } from 'declarations/backend';
-import logo from './logo2.svg';
+import { App } from 'frontend/src/Boost.js';
+import { Sidebar } from 'frontend/src/panels/Sidebar.js';
 
-class App {
-  greeting = '';
+export default class MetavizApp extends App {
 
-  constructor() {
-    this.#render();
-  }
+    init() {
+    	this.sidebar = new Sidebar();
+    	this.append(this.sidebar);
+    }
 
-  #handleSubmit = async (e) => {
-    e.preventDefault();
-    const name = document.getElementById('name').value;
-    this.greeting = await backend.greet(name);
-    this.#render();
-  };
+    router(path, params) {
+    	console.log('router', path, params)
 
-  #render() {
-    let body = html`
-      <main>
-        <img src="${logo}" alt="DFINITY logo" />
-        <br />
-        <br />
-        <form action="#">
-          <label for="name">Enter your name: &nbsp;</label>
-          <input id="name" alt="Name" type="text" />
-          <button type="submit">Click Me!</button>
-        </form>
-        <section id="greeting">${this.greeting}</section>
-      </main>
-    `;
-    render(body, document.getElementById('root'));
-    document
-      .querySelector('form')
-      .addEventListener('submit', this.#handleSubmit);
-  }
+    	switch (path) {
+	    	case '/dashboard/boards/':
+	    		// this.right.append(new Boards());
+	    		break;
+	    	case '/dashboard/users/':
+	    		// this.right.append(new Users());
+	    		break;
+    	}
+
+    }
+
 }
-
-export default App;
