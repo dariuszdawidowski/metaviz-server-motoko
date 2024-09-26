@@ -1,6 +1,6 @@
 /**
  * Boost rendering and events framework for JavaScript
- * v 0.3.5
+ * v 0.3.6
  */
 
 export class App {
