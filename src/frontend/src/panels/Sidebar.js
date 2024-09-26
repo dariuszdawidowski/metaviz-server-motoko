@@ -5,29 +5,31 @@ class Icon extends Component {
 
     constructor(app, args) {
         super(app, null);
+
+        // Build
         this.element.id = args.id;
         this.element.classList.add('icon');
         this.element.dataset.url = args.url;
         this.element.innerHTML = `<span class="${args.icon}"></span>`;
-    }
 
-    init() {
+        // Events
         this.event.on({
-            group: 'dashboard:sidebar:click',
+            id: `sidebar:${this.element.id}`,
             type: 'click',
             callback: () => {
                 this.url(this.element.dataset.url);
-                this.app.event.call({group: 'dashboard:sidebar:clear'});
+                this.app.event.call({id: `sidebar:clear:*`});
                 this.select();
             }
         });
-        /*this.event.on({
-            group: 'dashboard:sidebar:clear',
+
+        this.event.on({
+            id: `sidebar:clear:${this.element.id}`,
             callback: () => {
                 console.log('CLR', this.element.id)
                 this.deselect();
             }
-        });*/
+        });
     }
 
     select() {
@@ -43,7 +45,8 @@ class Icon extends Component {
 
 export class Sidebar extends Component {
 
-    init() {
+    constructor(app) {
+        super(app, null);
         this.element.classList.add('sidebar');
         this.element.innerHTML = `<a href="https://www.metaviz.net" target="_blank"><img src="/metaviz-mark-colorful.svg" width="38" height="38"></a>`;
         this.iconBoards = new Icon(this.app, {id: 'icon-page-boards', icon: 'mdi mdi-bulletin-board', url: '/dashboard/boards/'});

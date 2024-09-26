@@ -1,6 +1,6 @@
 /**
  * Boost rendering and events framework for JavaScript
- * v 0.4.0
+ * v 0.4.1
  */
 
 export class App {
@@ -13,11 +13,11 @@ export class App {
         // Event manager
         this.event = {
 
-            // {'group:id': [{type, element, callback}, ], ...}
+            // {'id pattern': {type, element, callback}, ...}
             listeners: {},
 
             on: (args) => {
-                const regexPattern = new RegExp('^' + args.group.replace(/\*/g, '.*') + '$');
+                const regexPattern = new RegExp('^' + args.id.replace(/\*/g, '.*') + '$');
                 const matches = Object.keys(this.event.listeners).filter(key => regexPattern.test(key));
                 matches.forEach(match => {
                     console.log('ON:', match)
@@ -26,7 +26,7 @@ export class App {
             },
         
             off: (args) => {
-                const regexPattern = new RegExp('^' + args.group.replace(/\*/g, '.*') + '$');
+                const regexPattern = new RegExp('^' + args.id.replace(/\*/g, '.*') + '$');
                 const matches = Object.keys(this.event.listeners).filter(key => regexPattern.test(key));
                 matches.forEach(match => {
                     console.log('OFF:', match)
@@ -35,7 +35,7 @@ export class App {
             },
         
             call: (args) => {
-                const regexPattern = new RegExp('^' + args.group.replace(/\*/g, '.*') + '$');
+                const regexPattern = new RegExp('^' + args.id.replace(/\*/g, '.*') + '$');
                 const matches = Object.keys(this.event.listeners).filter(key => regexPattern.test(key));
                 matches.forEach(match => {
                     console.log('CALL:', match)
@@ -89,23 +89,24 @@ export class Component {
 
             on: (args) => {
                 console.log('on:', args)
-                this.app.event.listeners[args.group] = {
-                    type: args.type,
+                if (args.id in this.app.event.listeners) console.error(`Conflicting events ${args.id}`)
+                this.app.event.listeners[args.id] = {
+                    type: ('type' in args ? args.type : null),
                     callback: args.callback.bind(this),
                     element: this.element
                 };
-                this.element.addEventListener(args.type, this.app.event.listeners[args.group].callback);
+                this.element.addEventListener('type' in args ? args.type : args.id, this.app.event.listeners[args.id].callback);
             },
         
             off: (args) => {
                 console.log('off:', args)
-                this.element.removeEventListener(this.app.event.listeners[args.group].type, this.app.event.listeners[args.group].callback);
-                delete this.app.event.listeners[args.group];
+                this.element.removeEventListener(this.app.event.listeners[args.id].type, this.app.event.listeners[args.id].callback);
+                delete this.app.event.listeners[args.id];
             },
         
             call: (args) => {
                 console.log('call:', args)
-                this.element.dispatchEvent(new Event(args.group));
+                this.element.dispatchEvent(new Event(args.id));
             }
         
         };
@@ -123,12 +124,6 @@ export class Component {
         // Reload event
         window.addEventListener('reload', this.update.bind(this));
 
-        // Init
-        this.init();
-    }
-
-    init() {
-        /*** OVERLOAD ***/
     }
 
     append(component) {
