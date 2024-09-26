@@ -1,6 +1,6 @@
 /**
  * Boost rendering and events framework for JavaScript
- * v 0.3.6
+ * v 0.4.0
  */
 
 export class App {
@@ -11,9 +11,40 @@ export class App {
         this.element = document.querySelector(selector);
 
         // Event manager
-        this.listeners = {};
+        this.event = {
 
-        // Init event
+            // {'group:id': [{type, element, callback}, ], ...}
+            listeners: {},
+
+            on: (args) => {
+                const regexPattern = new RegExp('^' + args.group.replace(/\*/g, '.*') + '$');
+                const matches = Object.keys(this.event.listeners).filter(key => regexPattern.test(key));
+                matches.forEach(match => {
+                    console.log('ON:', match)
+                    this.event.listeners[match].element.addEventListener(this.event.listeners[match].type, this.event.listeners[match].callback);
+                });
+            },
+        
+            off: (args) => {
+                const regexPattern = new RegExp('^' + args.group.replace(/\*/g, '.*') + '$');
+                const matches = Object.keys(this.event.listeners).filter(key => regexPattern.test(key));
+                matches.forEach(match => {
+                    console.log('OFF:', match)
+                    this.event.listeners[match].element.removeEventListener(this.event.listeners[match].type, this.event.listeners[match].callback);
+                });
+            },
+        
+            call: (args) => {
+                const regexPattern = new RegExp('^' + args.group.replace(/\*/g, '.*') + '$');
+                const matches = Object.keys(this.event.listeners).filter(key => regexPattern.test(key));
+                matches.forEach(match => {
+                    console.log('CALL:', match)
+                    this.event.listeners[match].element.dispatchEvent(new Event(this.event.listeners[match].type));
+                });
+            }
+        };
+
+        // Launch
         document.addEventListener(
             'DOMContentLoaded',
             () => {
@@ -44,31 +75,6 @@ export class App {
         /*** OVERLOAD ***/
     }
 
-    on(pattern) {
-        const regexPattern = new RegExp('^' + pattern.replace(/\*/g, '.*') + '$');
-        const matches = Object.keys(this.listeners).filter(key => regexPattern.test(key));
-        matches.forEach(match => {
-            this.listeners[match].element.addEventListener(this.listeners[match].type, this.listeners[match].fn);
-        });
-    }
-
-    off(pattern) {
-        const regexPattern = new RegExp('^' + pattern.replace(/\*/g, '.*') + '$');
-        const matches = Object.keys(this.listeners).filter(key => regexPattern.test(key));
-        matches.forEach(match => {
-            this.listeners[match].element.removeEventListener(this.listeners[match].type, this.listeners[match].fn);
-        });
-    }
-
-    call(pattern) {
-        const regexPattern = new RegExp('^' + pattern.replace(/\*/g, '.*') + '$');
-        const matches = Object.keys(this.listeners).filter(key => regexPattern.test(key));
-        matches.forEach(match => {
-            console.log(match)
-            this.listeners[match].element.dispatchEvent(new Event(this.listeners[match].type));
-        });
-    }
-
 }
 
 export class Component {
@@ -77,6 +83,32 @@ export class Component {
 
         // Main app reference
         this.app = app;
+
+        // Event support
+        this.event = {
+
+            on: (args) => {
+                console.log('on:', args)
+                this.app.event.listeners[args.group] = {
+                    type: args.type,
+                    callback: args.callback.bind(this),
+                    element: this.element
+                };
+                this.element.addEventListener(args.type, this.app.event.listeners[args.group].callback);
+            },
+        
+            off: (args) => {
+                console.log('off:', args)
+                this.element.removeEventListener(this.app.event.listeners[args.group].type, this.app.event.listeners[args.group].callback);
+                delete this.app.event.listeners[args.group];
+            },
+        
+            call: (args) => {
+                console.log('call:', args)
+                this.element.dispatchEvent(new Event(args.group));
+            }
+        
+        };
 
         // Main element
         this.element = selector ? document.querySelector(selector) : document.createElement('div');
@@ -105,20 +137,6 @@ export class Component {
 
     async update() {
         /*** OVERLOAD ***/
-    }
-
-    on(id, type, fn) {
-        this.app.listeners[id] = {type, fn: fn.bind(this), element: this.element};
-        this.element.addEventListener(type, this.app.listeners[id].fn);
-    }
-
-    off(id) {
-        this.element.removeEventListener(this.app.listeners[id].type, this.app.listeners[id].fn);
-        delete this.app.listeners[id];
-    }
-
-    call(id) {
-        this.element.dispatchEvent(new Event(id));
     }
 
     url(path) {

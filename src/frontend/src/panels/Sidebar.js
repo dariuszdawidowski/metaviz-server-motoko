@@ -21,13 +21,13 @@ class Icon extends Component {
                 this.select();
             }
         });
-        this.event.on({
+        /*this.event.on({
             group: 'dashboard:sidebar:clear',
             callback: () => {
                 console.log('CLR', this.element.id)
                 this.deselect();
             }
-        });
+        });*/
     }
 
     select() {
