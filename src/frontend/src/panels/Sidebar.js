@@ -12,8 +12,14 @@ class Icon extends Component {
     }
 
     init() {
-        this.on('dashboard:sidebar:click', 'click', () => {
+        this.on(`dashboard:sidebar:click:${this.element.id}`, 'click', () => {
             this.url(this.element.dataset.url);
+            this.app.call('dashboard:sidebar:clear:*');
+            this.select();
+        });
+        this.on(`dashboard:sidebar:clear:${this.element.id}`, 'clear', () => {
+            console.log('CLR', this.element.id)
+            this.deselect();
         });
     }
 

@@ -1,6 +1,6 @@
 /**
  * Boost rendering and events framework for JavaScript
- * v 0.3.4
+ * v 0.3.5
  */
 
 export class App {
@@ -47,7 +47,7 @@ export class App {
     on(pattern) {
         const regexPattern = new RegExp('^' + pattern.replace(/\*/g, '.*') + '$');
         const matches = Object.keys(this.listeners).filter(key => regexPattern.test(key));
-        mathes.forEach(match => {
+        matches.forEach(match => {
             this.listeners[match].element.addEventListener(this.listeners[match].type, this.listeners[match].fn);
         });
     }
@@ -55,8 +55,17 @@ export class App {
     off(pattern) {
         const regexPattern = new RegExp('^' + pattern.replace(/\*/g, '.*') + '$');
         const matches = Object.keys(this.listeners).filter(key => regexPattern.test(key));
-        mathes.forEach(match => {
+        matches.forEach(match => {
             this.listeners[match].element.removeEventListener(this.listeners[match].type, this.listeners[match].fn);
+        });
+    }
+
+    call(pattern) {
+        const regexPattern = new RegExp('^' + pattern.replace(/\*/g, '.*') + '$');
+        const matches = Object.keys(this.listeners).filter(key => regexPattern.test(key));
+        matches.forEach(match => {
+            console.log(match)
+            this.listeners[match].element.dispatchEvent(new Event(this.listeners[match].type));
         });
     }
 
@@ -99,13 +108,17 @@ export class Component {
     }
 
     on(id, type, fn) {
-        this.app.listeners[id] = {type, fn: fn.bind(this), element: this.element, active: true};
+        this.app.listeners[id] = {type, fn: fn.bind(this), element: this.element};
         this.element.addEventListener(type, this.app.listeners[id].fn);
     }
 
     off(id) {
         this.element.removeEventListener(this.app.listeners[id].type, this.app.listeners[id].fn);
         delete this.app.listeners[id];
+    }
+
+    call(id) {
+        this.element.dispatchEvent(new Event(id));
     }
 
     url(path) {
