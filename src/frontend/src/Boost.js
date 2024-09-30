@@ -1,6 +1,7 @@
 /**
- * Boost rendering and events framework for JavaScript
- * v 0.4.1
+ * Boost v 0.4.2
+ * Ultra-minimalistic component rendering and event handling framework for JavaScript
+ * Copyright (C) 2024 Dariusz Dawidowski
  */
 
 export class App {
@@ -16,28 +17,27 @@ export class App {
             // {'id pattern': {type, element, callback}, ...}
             listeners: {},
 
+            find: (pattern) => {
+                const regexPattern = new RegExp('^' + pattern.replace(/\*/g, '.*') + '$');
+                return Object.keys(this.event.listeners).filter(key => regexPattern.test(key));
+            },
+
             on: (args) => {
-                const regexPattern = new RegExp('^' + args.id.replace(/\*/g, '.*') + '$');
-                const matches = Object.keys(this.event.listeners).filter(key => regexPattern.test(key));
-                matches.forEach(match => {
+                this.event.find(args.id).forEach(match => {
                     console.log('ON:', match)
                     this.event.listeners[match].element.addEventListener(this.event.listeners[match].type, this.event.listeners[match].callback);
                 });
             },
         
             off: (args) => {
-                const regexPattern = new RegExp('^' + args.id.replace(/\*/g, '.*') + '$');
-                const matches = Object.keys(this.event.listeners).filter(key => regexPattern.test(key));
-                matches.forEach(match => {
+                this.event.find(args.id).forEach(match => {
                     console.log('OFF:', match)
                     this.event.listeners[match].element.removeEventListener(this.event.listeners[match].type, this.event.listeners[match].callback);
                 });
             },
         
             call: (args) => {
-                const regexPattern = new RegExp('^' + args.id.replace(/\*/g, '.*') + '$');
-                const matches = Object.keys(this.event.listeners).filter(key => regexPattern.test(key));
-                matches.forEach(match => {
+                this.event.find(args.id).forEach(match => {
                     console.log('CALL:', match)
                     this.event.listeners[match].element.dispatchEvent(new Event(this.event.listeners[match].type));
                 });
@@ -112,7 +112,7 @@ export class Component {
         };
 
         // Main element
-        this.element = selector ? document.querySelector(selector) : document.createElement('div');
+        this.element = selector ? ((selector.startsWith('.') || selector.startsWith('#')) ? document.querySelector(selector) : document.createElement(selector)) : document.createElement('div');
 
         // Changes observer
         const observer = new MutationObserver(async () => {

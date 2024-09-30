@@ -56,4 +56,4 @@ export class Sidebar extends Component {
         this.append(this.iconUsers);
     }
 
-};
+}
