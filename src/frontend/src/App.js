@@ -3,6 +3,8 @@ import { Router } from 'frontend/src/utils/Router.js';
 import { Component } from 'frontend/src/utils/Component.js';
 import { Sidebar } from 'frontend/src/widgets/Sidebar.js'
 import { PageBoards } from 'frontend/src/pages/Boards.js';
+import { PageGroups } from 'frontend/src/pages/Groups.js';
+import { PageUsers } from 'frontend/src/pages/Users.js';
 
 
 class Dashboard extends Component {
@@ -20,10 +22,28 @@ class Dashboard extends Component {
         // Content empty container
         this.content = new Component();
         this.append(this.content);
+
+        // Active content page
+        this.page = null;
     }
 
-    set(component) {
-        this.content.replace(component);
+    set(path) {
+        this.sidebar.select(path);
+
+        switch (path) {
+            case '/dashboard/boards/':
+                this.page = new PageBoards();
+                this.content.replace(this.page);
+                break;
+            case '/dashboard/users/':
+                this.page = new PageUsers();
+                this.content.replace(this.page);
+                break;
+            case '/dashboard/groups/':
+                this.page = new PageGroups();
+                this.content.replace(this.page);
+                break;
+        }
     }
 
 }
@@ -41,20 +61,13 @@ export default class MetavizApp extends Router {
 
     router(path, params) {
 
-        // Lazy create dashboard
-        if (path.startsWith('/dashboard/') && !this.dashboard) {
-            this.dashboard = new Dashboard();
-            this.main.append(this.dashboard.element);
-        }
-
-        // URLs
-        switch (path) {
-            case '/dashboard/boards/':
-                this.dashboard.set(new PageBoards());
-                break;
-            case '/dashboard/users/':
-                // this.dashboard.set(new PageUsers());
-                break;
+        // Dashboard
+        if (path.startsWith('/dashboard/')) {
+            if (!this.dashboard) {
+                this.dashboard = new Dashboard();
+                this.main.append(this.dashboard.element);
+            }
+            this.dashboard.set(path);
         }
 
     }

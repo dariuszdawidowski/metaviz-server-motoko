@@ -3,33 +3,24 @@ import { Component } from 'frontend/src/utils/Component.js';
 
 export class SidebarIcon extends Component {
 
+    /**
+     * Constructor
+     * args.icon: icon class
+     * args.url: destination url
+     */
+
     constructor(args) {
         super();
 
         // Build
-        this.element.id = args.id;
         this.element.classList.add('icon');
         this.element.dataset.url = args.url;
         this.element.innerHTML = `<span class="${args.icon}"></span>`;
 
         // Events
-        // this.event.on({
-        //     id: `sidebar:${this.element.id}`,
-        //     type: 'click',
-        //     callback: () => {
-        //         this.url(this.element.dataset.url);
-        //         this.app.event.call({id: `sidebar:clear:*`});
-        //         this.select();
-        //     }
-        // });
-
-        // this.event.on({
-        //     id: `sidebar:clear:${this.element.id}`,
-        //     callback: () => {
-        //         console.log('CLR', this.element.id)
-        //         this.deselect();
-        //     }
-        // });
+        this.element.addEventListener('click', () => {
+            this.url(args.url);
+        });
     }
 
     select() {
@@ -38,6 +29,11 @@ export class SidebarIcon extends Component {
 
     deselect() {
         this.element.classList.remove('selected');
+    }
+
+    url(path) {
+        window.history.replaceState({}, '', path);
+        window.dispatchEvent(new Event('urlchange'));
     }
 
 }

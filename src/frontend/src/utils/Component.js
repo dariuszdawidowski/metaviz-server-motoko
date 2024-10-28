@@ -1,5 +1,5 @@
 /**
- * Component v 0.7.2
+ * Component v 0.7.3
  * Minimalistic DOM component for JavaScript
  * Copyright (C) 2024 Dariusz Dawidowski
  * Licence: MIT
@@ -9,9 +9,10 @@ export class Component {
 
     /**
      * Constructor
-     * args.type: DOM element e.g. 'div' (default), 'button', 'input'
-     * args.html: html string to render
-     * args.selector: dont create new element but assign to selector
+     * args.id: id for the DOM element (optional)
+     * args.type: DOM element e.g. 'div' (default), 'button', 'input' (optional)
+     * args.html: html string to render (optional)
+     * args.selector: dont create new element but assign to selector (optional)
      */
 
     constructor(args = {}) {
@@ -37,6 +38,11 @@ export class Component {
             this.element = document.createElement((args.type !== undefined) ? args.type : 'div');
         }
 
+        // ID
+        if (args.id !== undefined) {
+            this.element.id = args.id;
+        }
+
     }
 
     /**
@@ -52,7 +58,8 @@ export class Component {
      */
 
     replace(component) {
-        this.element.replaceWith(component.element);
+        this.element.innerHTML = '';
+        this.element.append(component.element);
     }
 
 }
