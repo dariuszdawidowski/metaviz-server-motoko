@@ -7,8 +7,11 @@ import { PageBoards } from 'frontend/src/pages/Boards.js';
 
 class Dashboard extends Component {
 
-    constructor(args) {
-        super(args);
+    constructor() {
+        super();
+
+        // Classes
+        this.element.classList.add('dashboard');
 
         // Sidebar component
         this.sidebar = new Sidebar();
@@ -31,7 +34,8 @@ export default class MetavizApp extends Router {
     constructor() {
         super();
 
-        // Main element
+        // Main elements
+        this.main = document.querySelector('#app');
         this.dashboard = null;
     }    
 
@@ -39,7 +43,8 @@ export default class MetavizApp extends Router {
 
         // Lazy create dashboard
         if (path.startsWith('/dashboard/') && !this.dashboard) {
-            this.dashboard = new Dashboard({ selector: '#app' });
+            this.dashboard = new Dashboard();
+            this.main.append(this.dashboard.element);
         }
 
         // URLs

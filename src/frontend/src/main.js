@@ -1,4 +1,4 @@
 import MetavizApp from './App';
-import './index.scss';
+import './style.css';
 
 const app = new MetavizApp();
