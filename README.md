@@ -24,7 +24,7 @@ Frontend refers to the admin and user panel, the diagram editor itself and other
 dfx start --background
 
 # Checking that process runs
- lsof -i tcp:4943
+lsof -i tcp:4943
 ```
 
 ```bash

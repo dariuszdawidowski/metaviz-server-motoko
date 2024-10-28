@@ -1,13 +1,19 @@
 import { backend } from 'declarations/backend';
-import { App } from 'frontend/src/Boost.js';
-import { Sidebar } from 'frontend/src/panels/Sidebar.js';
+import { Router } from 'frontend/src/utils/Router.js';
+import { Sidebar } from 'frontend/src/widgets/Sidebar.js';
 
-export default class MetavizApp extends App {
+export default class MetavizApp extends Router {
 
-    init() {
+    constructor(selector) {
+    	super();
+
+        // Main element
+        this.element = document.querySelector(selector);
+
+        // Create components
     	this.sidebar = new Sidebar(this);
-    	this.append(this.sidebar);
-    }
+        this.element.append(this.sidebar.element);
+	}    
 
     router(path, params) {
     	console.log('router', path, params)
