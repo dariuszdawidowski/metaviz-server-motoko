@@ -18,7 +18,7 @@ export default class MetavizApp extends Router {
 
         switch (path) {
             case '/dashboard/boards/':
-                this.page = new PageBoards(this);
+                this.page = new PageBoards();
                 this.element.append(this.page.element);
                 break;
             case '/dashboard/users/':

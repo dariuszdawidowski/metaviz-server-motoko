@@ -1,7 +1,7 @@
 import { Component } from 'frontend/src/utils/Component.js';
 
 
-class SidebarIcon extends Component {
+export class SidebarIcon extends Component {
 
     constructor(args) {
         super();

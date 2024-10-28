@@ -13,7 +13,7 @@ export class Component {
      * args.html: html string to render
      */
 
-    constructor(args) {
+    constructor(args = {}) {
 
         // Main DOM element
         this.element = null;

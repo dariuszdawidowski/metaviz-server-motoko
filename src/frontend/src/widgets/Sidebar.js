@@ -1,5 +1,5 @@
 import { Component } from 'frontend/src/utils/Component.js';
-import { SidebarIcon } from './SidebarIcon.js';
+import { SidebarIcon } from 'frontend/src/widgets/SidebarIcon.js';
 
 
 export class Sidebar extends Component {
