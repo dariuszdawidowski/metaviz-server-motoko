@@ -9,6 +9,13 @@ export class Router {
 
     constructor() {
 
+        // Launch event
+        document.addEventListener('DOMContentLoaded', () => {
+                window.dispatchEvent(new Event('urlchange'));
+            },
+            {once: true}
+        );
+
         // URL change event handler
         window.addEventListener('urlchange', () => {
             const url = new URL(window.location.href)
