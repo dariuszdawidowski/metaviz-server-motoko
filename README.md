@@ -95,3 +95,7 @@ dfx deploy --ic
 - [Total Popup](https://github.com/dariuszdawidowski/total-popup)
 - [Total Pro Menu](https://github.com/dariuszdawidowski/total-pro-menu)
 - [Total Text](https://github.com/dariuszdawidowski/total-text)
+
+## External Licenses
+- Logo ICP.svg has separate license. For more information refer [Internet Computer website](https://internetcomputer.org).
+- Logo NFID.avif has separate license. For more information refer [Identity Kit website](https://docs.identitykit.xyz).
