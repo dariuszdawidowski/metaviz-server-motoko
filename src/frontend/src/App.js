@@ -4,6 +4,7 @@ import { Component } from 'frontend/src/utils/Component.js';
 import { Sidebar } from 'frontend/src/widgets/Sidebar.js'
 import { PageBoards } from 'frontend/src/pages/Boards.js';
 import { PageGroups } from 'frontend/src/pages/Groups.js';
+import { PageLogin } from 'frontend/src/pages/Login.js';
 import { PageUsers } from 'frontend/src/pages/Users.js';
 
 
@@ -61,8 +62,14 @@ export default class MetavizApp extends Router {
 
     router(path, params) {
 
+        // Authorization
+        if (path == '/auth/login/') {
+            const login = new PageLogin();
+            this.main.append(login.element);
+        }
+
         // Dashboard
-        if (path.startsWith('/dashboard/')) {
+        else if (path.startsWith('/dashboard/')) {
             if (!this.dashboard) {
                 this.dashboard = new Dashboard();
                 this.main.append(this.dashboard.element);

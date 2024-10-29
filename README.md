@@ -10,12 +10,18 @@ Frontend refers to the admin and user panel, the diagram editor itself and other
 
 ## Setup the project locally on Windows
 
-- Install WSL2 (runs from "Ubuntu" in the Menu).
+- Install WSL2 [Guide](https://learn.microsoft.com/en-us/windows/wsl/install)
 - Install CDK [Guide](https://internetcomputer.org/docs/current/developer-docs/getting-started/install/)
+- Install NodeJS [Download](https://nodejs.org/en/download/)
 
 ## Setup the project locally on GNU/Linux and macOS
 
 - Install CDK [Guide](https://internetcomputer.org/docs/current/developer-docs/getting-started/install/)
+- Install NodeJS [Download](https://nodejs.org/en/download/)
+
+## Troubleshooting on macOS
+
+If you encounter an error related to 'esbuild' - run dfx in the terminal using Rosetta x86 compatibility mode.
 
 ## Running local blockchain replica
 
@@ -25,6 +31,9 @@ dfx start --background
 
 # Checking that process runs
 lsof -i tcp:4943
+
+# Stops the replica running in the background
+dfx stop
 ```
 
 ```bash
