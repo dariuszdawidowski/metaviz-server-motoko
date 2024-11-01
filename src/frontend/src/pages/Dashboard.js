@@ -1,4 +1,9 @@
 import { Component } from 'frontend/src/utils/Component.js';
+import { PageBoards } from 'frontend/src/pages/Boards.js';
+import { PageGroups } from 'frontend/src/pages/Groups.js';
+import { PageUsers } from 'frontend/src/pages/Users.js';
+import { Page404 } from 'frontend/src/pages/404.js';
+import { Sidebar } from 'frontend/src/widgets/Sidebar.js'
 
 
 export class Dashboard extends Component {
@@ -10,7 +15,7 @@ export class Dashboard extends Component {
         this.element.classList.add('dashboard');
 
         // Sidebar component
-        this.sidebar = new Sidebar();
+        this.sidebar = new Sidebar({app: args.app});
         this.append(this.sidebar);
 
         // Content empty container
@@ -37,6 +42,9 @@ export class Dashboard extends Component {
                 this.page = new PageGroups();
                 this.content.replace(this.page);
                 break;
+            default:
+                this.page = new Page404();
+                this.content.replace(this.page);
         }
     }
 

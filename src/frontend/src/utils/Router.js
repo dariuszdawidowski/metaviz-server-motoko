@@ -1,5 +1,5 @@
 /**
- * Router v 0.7.0
+ * Router v 0.7.1
  * Minimalistic URL router for JavaScript
  * Copyright (C) 2024 Dariusz Dawidowski
  * Licence: MIT
@@ -8,13 +8,6 @@
 export class Router {
 
     constructor() {
-
-        // Launch event
-        document.addEventListener('DOMContentLoaded', () => {
-                window.dispatchEvent(new Event('urlchange'));
-            },
-            {once: true}
-        );
 
         // URL change event handler
         window.addEventListener('urlchange', () => {

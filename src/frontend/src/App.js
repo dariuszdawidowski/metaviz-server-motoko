@@ -5,12 +5,9 @@ import { createActor, backend } from 'declarations/backend';
 
 import { Router } from 'frontend/src/utils/Router.js';
 import { Component } from 'frontend/src/utils/Component.js';
-import { Sidebar } from 'frontend/src/widgets/Sidebar.js'
-import { Dashbaord } from 'frontend/src/pages/Dashboard.js'
-import { PageBoards } from 'frontend/src/pages/Boards.js';
-import { PageGroups } from 'frontend/src/pages/Groups.js';
+import { Dashboard } from 'frontend/src/pages/Dashboard.js'
 import { PageLogin } from 'frontend/src/pages/Login.js';
-import { PageUsers } from 'frontend/src/pages/Users.js';
+import { Page404 } from 'frontend/src/pages/404.js';
 
 
 export default class MetavizApp extends Router {
@@ -21,51 +18,100 @@ export default class MetavizApp extends Router {
         // Main elements
         this.main = document.querySelector('#app');
         this.dashboard = null;
-    }    
+
+        // IC connection
+        this.actor = backend;
+        this.authClient = null;
+        this.identity = null;
+        this.agent = null;
+        this.auth();
+    }
 
     router(path, params) {
 
-        // Authorization
-        if (path == '/auth/login/') {
+        // Login
+        if (path == '/' || path == '/auth/login/') {
             const login = new PageLogin({app: this});
-            this.main.append(login.element);
+            this.page(login);
+        }
+
+        // Logout
+        else if (path == '/auth/logout/') {
+            this.logoutII();
         }
 
         // Dashboard
         else if (path.startsWith('/dashboard/')) {
             if (!this.dashboard) {
                 this.dashboard = new Dashboard({app: this});
-                this.main.append(this.dashboard.element);
             }
+            this.page(this.dashboard);
             this.dashboard.set(path);
+        }
+
+        // 404
+        else {
+            const notFound = new Page404();
+            this.page(notFound);
         }
 
     }
 
+    page(component) {
+        this.main.innerHTML = '';
+        this.main.append(component.element);
+    }
+
     url(path) {
-        window.history.replaceState({}, '', path);
-        window.dispatchEvent(new Event('urlchange'));
+        if (window.location.pathname != path) {
+            console.log('URL ->', path)
+            window.history.replaceState({}, '', path);
+            window.dispatchEvent(new Event('urlchange'));
+        }
+    }
+
+    async auth() {
+        this.authClient = await AuthClient.create();
+        if (await this.authClient.isAuthenticated()) {
+            this.loggedII();
+        }
+        else {
+            this.url('/auth/login/');
+        }
     }
 
     async loginII() {
-        let actor = backend;
-        let authClient = await AuthClient.create();
         await new Promise((resolve) => {
-            authClient.login({
+            this.authClient.login({
                 identityProvider: `http://${process.env.CANISTER_ID_INTERNET_IDENTITY}.localhost:8080/`,
                 onSuccess: resolve,
             });
         });
-        const identity = authClient.getIdentity();
-        const agent = new HttpAgent({identity});
-        actor = createActor(process.env.CANISTER_ID_BACKEND, {
-            agent,
-        });
-        console.log('login II', identity, agent, actor);
+        this.identity = this.authClient.getIdentity();
+        this.agent = new HttpAgent({ identity: this.identity });
+        this.actor = createActor(process.env.CANISTER_ID_BACKEND, { agent: this.agent });
+        if (this.identity && this.agent && this.actor) this.url('/dashboard/boards/');
     }
 
-    loginNFID() {
-        console.log('login NFID');
+    async loggedII() {
+        this.identity = this.authClient.getIdentity();
+        this.agent = new HttpAgent({ identity: this.identity });
+        this.actor = createActor(process.env.CANISTER_ID_BACKEND, { agent: this.agent });
+        if (this.identity && this.agent && this.actor) this.url('/dashboard/boards/');
+    }
+
+    async logoutII() {
+        await this.authClient.logout();
+        this.url('/auth/login/');
+    }
+
+    async loginNFID() {
+    }
+
+    async loggedNFID() {
+    }
+
+    async logoutNFID() {
     }
 
 }
