@@ -4,23 +4,27 @@ import { SidebarIcon } from 'frontend/src/widgets/SidebarIcon.js';
 
 export class Sidebar extends Component {
 
-    constructor() {
-        super();
+    constructor(args) {
+        super(args);
+
         this.element.classList.add('sidebar');
         this.element.innerHTML = `<a href="https://www.metaviz.net" target="_blank"><img src="/metaviz-mark-colorful.svg" width="38" height="38"></a>`;
 
         this.page = {
             '/dashboard/boards/': new SidebarIcon({
+                app: args.app,
                 id: 'icon-page-boards',
                 icon: 'mdi mdi-bulletin-board',
                 url: '/dashboard/boards/'
             }),
             '/dashboard/users/': new SidebarIcon({
+                app: args.app,
                 id: 'icon-page-users',
                 icon: 'mdi mdi-account-multiple',
                 url: '/dashboard/users/'
             }),
             '/dashboard/groups/': new SidebarIcon({
+                app: args.app,
                 id: 'icon-page-groups',
                 icon: 'mdi mdi-shield-account',
                 url: '/dashboard/groups/'

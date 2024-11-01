@@ -10,7 +10,7 @@ export class SidebarIcon extends Component {
      */
 
     constructor(args) {
-        super();
+        super(args);
 
         // Build
         this.element.classList.add('icon');
@@ -19,7 +19,7 @@ export class SidebarIcon extends Component {
 
         // Events
         this.element.addEventListener('click', () => {
-            this.url(args.url);
+            this.app.url(args.url);
         });
     }
 
@@ -29,11 +29,6 @@ export class SidebarIcon extends Component {
 
     deselect() {
         this.element.classList.remove('selected');
-    }
-
-    url(path) {
-        window.history.replaceState({}, '', path);
-        window.dispatchEvent(new Event('urlchange'));
     }
 
 }

@@ -1,12 +1,10 @@
 import { Component } from 'frontend/src/utils/Component.js';
-import { createActor, backend } from "declarations/backend";
-import { AuthClient } from "@dfinity/auth-client"
-import { HttpAgent } from "@dfinity/agent";
 
 export class PageLogin extends Component {
 
-    constructor() {
+    constructor(args) {
         super({
+            ...args,
             html: `
                 <div class="panel">
                     <div class="midframe">
@@ -32,7 +30,7 @@ export class PageLogin extends Component {
         });
 
         this.element.querySelector('#login-ii').addEventListener('click', () => {
-            this.loginII();
+            this.app.loginII();
         });
 
         this.element.querySelector('#about-ii').addEventListener('click', () => {
@@ -40,7 +38,7 @@ export class PageLogin extends Component {
         });
 
         this.element.querySelector('#login-nfid').addEventListener('click', () => {
-            this.loginNFID();
+            this.app.loginNFID();
         });
 
         this.element.querySelector('#about-nfid').addEventListener('click', () => {
@@ -48,29 +46,8 @@ export class PageLogin extends Component {
         });
     }
 
-    async loginII() {
-        let actor = backend;
-        let authClient = await AuthClient.create();
-        await new Promise((resolve) => {
-            authClient.login({
-                identityProvider: `http://${process.env.CANISTER_ID_INTERNET_IDENTITY}.localhost:8080/`,
-                onSuccess: resolve,
-            });
-        });
-        const identity = authClient.getIdentity();
-        const agent = new HttpAgent({identity});
-        actor = createActor(process.env.CANISTER_ID_BACKEND, {
-            agent,
-        });
-        console.log('login II', identity, agent, actor);
-    }
-
     aboutII() {
         console.log('about II');
-    }
-
-    loginNFID() {
-        console.log('login NFID');
     }
 
     aboutNFID() {
