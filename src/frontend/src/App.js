@@ -30,7 +30,7 @@ export default class MetavizApp extends Router {
     router(path, params) {
 
         // Login
-        if (path == '/' || path == '/auth/login/') {
+        if (path == '/auth/login/') {
             const login = new PageLogin({app: this});
             this.page(login);
         }
@@ -63,11 +63,8 @@ export default class MetavizApp extends Router {
     }
 
     url(path) {
-        if (window.location.pathname != path) {
-            console.log('URL ->', path)
-            window.history.replaceState({}, '', path);
-            window.dispatchEvent(new Event('urlchange'));
-        }
+        window.history.replaceState({}, '', path);
+        window.dispatchEvent(new Event('urlchange'));
     }
 
     async auth() {
