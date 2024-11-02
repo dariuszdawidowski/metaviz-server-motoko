@@ -67,6 +67,16 @@ export default class MetavizApp extends Router {
         window.dispatchEvent(new Event('urlchange'));
     }
 
+    async get(key) {
+        const result = await backend.get(key);
+        return result;
+    }
+
+    async post(key, value) {
+        const result = await backend.post(key, value);
+        return result;
+    }
+
     async auth() {
         this.authClient = await AuthClient.create();
         if (await this.authClient.isAuthenticated()) {

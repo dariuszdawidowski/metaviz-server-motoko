@@ -31,19 +31,19 @@ export class Dashboard extends Component {
 
         switch (path) {
             case '/dashboard/boards/':
-                this.page = new PageBoards();
+                this.page = new PageBoards({app: this.app});
                 this.content.replace(this.page);
                 break;
             case '/dashboard/users/':
-                this.page = new PageUsers();
+                this.page = new PageUsers({app: this.app});
                 this.content.replace(this.page);
                 break;
             case '/dashboard/groups/':
-                this.page = new PageGroups();
+                this.page = new PageGroups({app: this.app});
                 this.content.replace(this.page);
                 break;
             default:
-                this.page = new Page404();
+                this.page = new Page404({app: this.app});
                 this.content.replace(this.page);
         }
     }
