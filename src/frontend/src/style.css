@@ -215,7 +215,7 @@ body {
 /* Boards */
 
 .right {
-    width: 70%;
+    width: 100%;
     height: calc(100% - 30px);
     margin: 15px;
     overflow-x: hidden;

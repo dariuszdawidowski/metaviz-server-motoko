@@ -20,6 +20,7 @@ export class Dashboard extends Component {
 
         // Content empty container
         this.content = new Component();
+        this.content.element.classList.add('right');
         this.append(this.content);
 
         // Active content page

@@ -5,7 +5,7 @@ import { createActor, backend } from 'declarations/backend';
 
 import { Router } from 'frontend/src/utils/Router.js';
 import { Component } from 'frontend/src/utils/Component.js';
-import { Dashboard } from 'frontend/src/pages/Dashboard.js'
+import { Dashboard } from 'frontend/src/pages/Dashboard.js';
 import { PageLogin } from 'frontend/src/pages/Login.js';
 import { Page404 } from 'frontend/src/pages/404.js';
 
