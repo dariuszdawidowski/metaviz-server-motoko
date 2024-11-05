@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "setup": "npm i && dfx canister create backend && dfx generate backend && dfx deploy",
+    "setup": "npm i && dfx canister create backend && dfx generate backend && mkdir lib && curl -o lib/internet_identity.did https://github.com/dfinity/internet-identity/releases/latest/download/internet_identity.did && curl -o lib/internet_identity_dev.wasm.gz https://github.com/dfinity/internet-identity/releases/latest/download/internet_identity_dev.wasm.gz && dfx deploy",
     "start": "vite --port 3000",
     "prebuild": "dfx generate",
     "build": "tsc && vite build",

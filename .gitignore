@@ -3,9 +3,12 @@
 .idea/
 **/*~
 
-# Mac OSX temporary files
+# macOS temporary files
 .DS_Store
 **/.DS_Store
+
+# Windows temporary files
+Thumbs.db
 
 # dfx temporary files
 .dfx/
@@ -23,3 +26,6 @@ dist/
 
 # environment variables
 .env
+
+# Libraries
+lib
