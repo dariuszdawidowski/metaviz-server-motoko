@@ -1,5 +1,7 @@
+import { backend } from 'declarations/backend';
 import { Component } from 'frontend/src/utils/Component.js';
 import { Topbar } from 'frontend/src/widgets/Topbar.js'
+import { Addbar } from 'frontend/src/widgets/Addbar.js'
 
 
 export class PageBoards extends Component {
@@ -8,9 +10,30 @@ export class PageBoards extends Component {
         super(args);
     
         // Topbar component
-        // this.topbar = new Topbar({text: `Your resources on ${boards.length} boards in ${categories.length} categories`});
-        this.topbar = new Topbar({text: `Your resources on ${1} boards in ${2} categories`});
+        this.topbar = new Topbar({text: `Your resources on x boards in x categories`});
         this.append(this.topbar);
+
+        // Add new category
+        this.addCategory = new Addbar({
+            text: 'ADD NEW CATEGORY',
+            placeholder: 'Category name',
+            callback: async (value) => {
+                console.log('ADDING CATEGORY', value)
+                // await this.addCategory(value, categories.items.length);
+            }
+        });
+        this.append(this.addCategory);
+
+        // Update
+        this.update();
+    }
+
+    async update() {
+        const categories = await backend.getCategories();
+        console.log('categories', categories)
+
+        this.element.querySelector('#topbar-summary').innerText = `Your resources on y boards in y categories`;
+
     }
 
 }
