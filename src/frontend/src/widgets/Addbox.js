@@ -2,7 +2,7 @@ import { Component } from 'frontend/src/utils/Component.js';
 import { cleanString } from 'frontend/src/utils/Text.js';
 
 
-export class Addbar extends Component {
+export class Addbox extends Component {
 
     constructor(args) {
         super(args);
