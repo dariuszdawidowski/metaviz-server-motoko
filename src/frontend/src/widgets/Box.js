@@ -12,23 +12,11 @@ export class Box extends Component {
     constructor(args) {
         super(args);
 
-        const group = document.createElement('div');
-        group.classList.add('group');
-        this.element.append(group);
+        this.element.classList.add('group');
 
         const h1 = document.createElement('h1');
         h1.innerHTML = args.title;
-        group.append(h1);
-
-    }
-
-    /**
-     * Icon
-     * args.body: string - icon HTML
-     */
-
-    icon(args) {
-        
+        this.element.append(h1);
 
     }
 

@@ -21,12 +21,23 @@ export class PageBoards extends Component {
     async render() {
         const categories = await backend.getCategories();
         const boards = await backend.getBoards();
-        console.log(boards)
+        console.log('boards', boards)
         categories.forEach(category => {
-            console.log(category);
+            console.log('cat:', category);
             const box = new Box({
                 title: '⇢ ' + category[1].name
             });
+            const icon1 = new Component({
+                html: `
+                    <a href="?board={board.id}" target="_blank" class="board-link-a" data-board="{board.id}">
+                        <div class="board-link">
+                            <div class="board-link-date">dd.mm</div>
+                            <div class="board-link-name">Name</div>
+                        </div>
+                    </a>
+                `
+            });
+            box.append(icon1);
             this.append(box);
         });
 

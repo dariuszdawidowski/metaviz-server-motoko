@@ -283,7 +283,7 @@ body {
     position: relative;
     width: 100px;
     height: 60px;
-    background-image: url(//cdn1.metaviz.net/typo-arrow.svg);
+    background-image: url(/typo-arrow.svg);
     background-size: 40px 40px;
     background-repeat: no-repeat;
     background-position: center;
@@ -296,7 +296,7 @@ a .board-link, a:visited .board-link {
 .board-link:hover, a:visited .board-link:hover {
     cursor: pointer;
     color: var(--metaviz-color-cyan);
-    background-image: url(//cdn1.metaviz.net/typo-arrow-cyan.svg);
+    background-image: url(/typo-arrow-cyan.svg);
 }
 
 .board-link-date {
