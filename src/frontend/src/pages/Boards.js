@@ -19,7 +19,7 @@ export class PageBoards extends Component {
             placeholder: 'Category name',
             callback: async (value) => {
                 console.log('ADDING CATEGORY', value)
-                // await this.addCategory(value, categories.items.length);
+                await backend.addCategory(value);
             }
         });
         this.append(this.addCategory);
