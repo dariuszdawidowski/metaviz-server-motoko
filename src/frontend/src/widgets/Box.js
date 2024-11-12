@@ -9,14 +9,16 @@ export class Box extends Component {
      * args.title: string - title for box
      */
 
-    constructor(args) {
+    constructor(args = {}) {
         super(args);
 
         this.element.classList.add('group');
 
-        const h1 = document.createElement('h1');
-        h1.innerHTML = args.title;
-        this.element.append(h1);
+        if ('title' in args) {
+            const h1 = document.createElement('h1');
+            h1.innerHTML = args.title;
+            this.element.append(h1);
+        }
 
     }
 

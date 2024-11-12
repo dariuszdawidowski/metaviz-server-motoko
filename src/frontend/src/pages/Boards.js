@@ -39,19 +39,31 @@ export class PageBoards extends Component {
             });
             box.append(icon1);
             this.append(box);
+
+            // Add new board
+            const addBoard = new Addbox({
+                text: 'ADD NEW BOARD',
+                placeholder: 'Board name',
+                callback: async (value) => {
+                    const newBoard = await backend.addBoard(value, category[1].name);
+                }
+            });
+            box.append(addBoard);
         });
 
         // Add new category
-        this.addCategory = new Addbox({
+        const addCategoryBox = new Box();
+        this.append(addCategoryBox);
+        const addCategory = new Addbox({
             text: 'ADD NEW CATEGORY',
             placeholder: 'Category name',
             callback: async (value) => {
                 const newCategory = await backend.addCategory(value);
             }
         });
-        this.append(this.addCategory);
+        addCategoryBox.append(addCategory);
 
-        this.element.querySelector('#topbar-summary').innerText = `Your resources on y boards in ${categories.length} categories`;
+        this.element.querySelector('#topbar-summary').innerText = `Your resources on ${boards.length} boards in ${categories.length} categories`;
 
     }
 

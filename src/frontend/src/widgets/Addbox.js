@@ -12,7 +12,7 @@ export class Addbox extends Component {
         this.callback = ('callback' in args) ? args.callback : null;
 
         const group = document.createElement('div');
-        group.classList.add('group');
+        group.classList.add('addbox');
         this.element.append(group);
 
         this.button = document.createElement('div');
