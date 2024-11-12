@@ -22,4 +22,14 @@ export class Box extends Component {
 
     }
 
+    /**
+     * Icon
+     * args.body: string - icon HTML
+     */
+
+    icon(args) {
+        
+
+    }
+
 }

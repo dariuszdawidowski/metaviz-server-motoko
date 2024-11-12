@@ -44,4 +44,37 @@ actor {
         db_categories.delete(key);
     };
 
+    /*** Database for BOARDS ***/
+
+    type Board = {
+        name: Text;
+        category: ?Category;
+    };
+
+    let db_boards = HashMap.HashMap<Text, Board>(0, Text.equal, Text.hash);
+
+    public query func getBoards() : async [(Text, Board)] {
+        return Iter.toArray<(Text, Board)>(db_boards.entries());
+    };
+
+    public query func getBoard(key: Text) : async ?Board {
+        return db_boards.get(key);
+    };
+
+    public shared func addBoard(name: Text, category: Text) : async (Text, Board) {
+        let cat = await getCategory(category);
+        let g = Source.Source();
+        let uuid = UUID.toText(await g.new());
+        let newBoard : Board = {
+            name = name;
+            category = cat;
+        };
+        db_boards.put(uuid, newBoard);
+        return (uuid, newBoard);
+    };
+
+    public shared func delBoard(key: Text) : async () {
+        db_boards.delete(key);
+    };
+
 };

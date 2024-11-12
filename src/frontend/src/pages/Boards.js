@@ -20,6 +20,8 @@ export class PageBoards extends Component {
 
     async render() {
         const categories = await backend.getCategories();
+        const boards = await backend.getBoards();
+        console.log(boards)
         categories.forEach(category => {
             console.log(category);
             const box = new Box({
