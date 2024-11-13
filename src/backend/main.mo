@@ -48,7 +48,7 @@ actor {
 
     type Board = {
         name: Text;
-        category: ?Category;
+        categoryKey: Text;
     };
 
     let db_boards = HashMap.HashMap<Text, Board>(0, Text.equal, Text.hash);
@@ -61,16 +61,17 @@ actor {
         return db_boards.get(key);
     };
 
-    public shared func addBoard(name: Text, category: Text) : async (Text, Board) {
-        let cat = await getCategory(category);
+    public shared func addBoard(name: Text, categoryKey: Text) : async ?(Text, Board) {
+        let cat = await getCategory(categoryKey);
+        if (cat == null) return null;
         let g = Source.Source();
         let uuid = UUID.toText(await g.new());
         let newBoard : Board = {
             name = name;
-            category = cat;
+            categoryKey = categoryKey;
         };
         db_boards.put(uuid, newBoard);
-        return (uuid, newBoard);
+        return ?(uuid, newBoard);
     };
 
     public shared func delBoard(key: Text) : async () {

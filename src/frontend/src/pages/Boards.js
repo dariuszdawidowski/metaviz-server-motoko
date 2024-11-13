@@ -21,23 +21,27 @@ export class PageBoards extends Component {
     async render() {
         const categories = await backend.getCategories();
         const boards = await backend.getBoards();
-        console.log('boards', boards)
         categories.forEach(category => {
             console.log('cat:', category);
             const box = new Box({
                 title: '⇢ ' + category[1].name
             });
-            const icon1 = new Component({
-                html: `
-                    <a href="?board={board.id}" target="_blank" class="board-link-a" data-board="{board.id}">
-                        <div class="board-link">
-                            <div class="board-link-date">dd.mm</div>
-                            <div class="board-link-name">Name</div>
-                        </div>
-                    </a>
-                `
+            boards.forEach(board => {
+                console.log('board:', board);
+                if (board[1].categoryKey === category[0]) {
+                    const icon = new Component({
+                        html: `
+                            <a href="?board=${board[0]}" target="_blank" class="board-link-a" data-board="${board[0]}">
+                                <div class="board-link">
+                                    <div class="board-link-date">dd.mm</div>
+                                    <div class="board-link-name">${board[1].name}</div>
+                                </div>
+                            </a>
+                        `
+                    });
+                    box.append(icon);
+                }
             });
-            box.append(icon1);
             this.append(box);
 
             // Add new board
@@ -45,7 +49,7 @@ export class PageBoards extends Component {
                 text: 'ADD NEW BOARD',
                 placeholder: 'Board name',
                 callback: async (value) => {
-                    const newBoard = await backend.addBoard(value, category[1].name);
+                    const newBoard = await backend.addBoard(value, category[0]);
                 }
             });
             box.append(addBoard);
