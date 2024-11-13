@@ -4,9 +4,9 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "setup": "npm i && dfx canister create backend && dfx generate backend && mkdir lib && curl -o lib/internet_identity.did https://github.com/dfinity/internet-identity/releases/latest/download/internet_identity.did && curl -o lib/internet_identity_dev.wasm.gz https://github.com/dfinity/internet-identity/releases/latest/download/internet_identity_dev.wasm.gz && dfx deploy",
+    "setup": "npm i && dfx canister create backend && dfx generate backend && dfx deploy",
     "start": "vite --port 3000",
-    "prebuild": "dfx generate",
+    "prebuild": "mops install && mkdir -p ./lib && curl -L -o ./lib/internet_identity.did https://github.com/dfinity/internet-identity/releases/latest/download/internet_identity.did && curl -L -o ./lib/internet_identity_dev.wasm.gz https://github.com/dfinity/internet-identity/releases/latest/download/internet_identity_dev.wasm.gz && dfx generate",
     "build": "tsc && vite build",
     "format": "prettier --write \"src/**/*.{json,js,jsx,ts,tsx,css,scss}\""
   },

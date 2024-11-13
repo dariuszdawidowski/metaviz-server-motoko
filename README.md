@@ -13,11 +13,13 @@ Frontend refers to the admin and user panel, the diagram editor itself and other
 - Install WSL2 [Guide](https://learn.microsoft.com/en-us/windows/wsl/install)
 - Install CDK [Guide](https://internetcomputer.org/docs/current/developer-docs/getting-started/install/)
 - Install NodeJS [Download](https://nodejs.org/en/download/)
+- Install MOPS [Website](https://mops.one/)
 
 ## 🚀 Setup the project locally on GNU/Linux and macOS
 
 - Install CDK [Guide](https://internetcomputer.org/docs/current/developer-docs/getting-started/install/)
 - Install NodeJS [Download](https://nodejs.org/en/download/)
+- Install MOPS [Website](https://mops.one/)
 
 ## 🐞 Troubleshooting on macOS
 
