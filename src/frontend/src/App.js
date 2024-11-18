@@ -4,7 +4,6 @@ import { HttpAgent } from '@dfinity/agent';
 import { createActor, backend } from 'declarations/backend';
 
 import { Router } from 'frontend/src/utils/Router.js';
-import { Component } from 'frontend/src/utils/Component.js';
 import { Spinner } from 'frontend/src/widgets/Spinner.js';
 import { Dashboard } from 'frontend/src/pages/Dashboard.js';
 import { PageLogin } from 'frontend/src/pages/Login.js';
@@ -94,19 +93,19 @@ export default class MetavizApp extends Router {
     async loginII() {
         await new Promise((resolve) => {
             this.authClient.login({
-                identityProvider: `http://${process.env.CANISTER_ID_INTERNET_IDENTITY}.localhost:8080/`,
+                identityProvider: `http://${process.env.CANISTER_ID_INTERNET_IDENTITY}.localhost:${process.env.CANISTER_PORT}/`,
                 onSuccess: resolve,
             });
         });
         this.identity = this.authClient.getIdentity();
-        this.agent = new HttpAgent({ identity: this.identity });
+        this.agent = await HttpAgent.create({ identity: this.identity });
         this.actor = createActor(process.env.CANISTER_ID_BACKEND, { agent: this.agent });
         if (this.identity && this.agent && this.actor) this.url('/dashboard/boards/');
     }
 
     async loggedII() {
         this.identity = this.authClient.getIdentity();
-        this.agent = new HttpAgent({ identity: this.identity });
+        this.agent = await HttpAgent.create({ identity: this.identity });
         this.actor = createActor(process.env.CANISTER_ID_BACKEND, { agent: this.agent });
         if (this.identity && this.agent && this.actor) this.url('/dashboard/boards/');
     }
