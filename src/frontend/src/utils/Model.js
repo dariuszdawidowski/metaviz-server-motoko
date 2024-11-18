@@ -1,5 +1,5 @@
 /**
- * Model v 0.1.0
+ * Model v 0.2.0
  * Minimalistic model class (MVC) for JavaScript
  * Copyright (C) 2024 Dariusz Dawidowski
  * Licence: MIT
@@ -18,18 +18,19 @@ export class Model {
     }
 
     /**
-     * Set the variable value
-     * key: name
-     * value: data
+     * Smart append new element to the array or object
+     * key: variable name
+     * value: element to append
      */
 
-    set(key, value) {
-        this.var[key] = value;
+    append(key, value) {
+        if (Array.isArray(this.var[key])) this.var[key].push(value);
+        else if (typeof(this.var[key]) == 'object') Object.assign(this.var[key], value);
     }
 
     /**
      * Getter
-     * key: name
+     * key: variable name
      */
 
     get(key) {

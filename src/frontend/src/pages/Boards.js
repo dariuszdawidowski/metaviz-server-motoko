@@ -55,7 +55,10 @@ export class PageBoards extends Component {
                 text: 'ADD NEW BOARD',
                 placeholder: 'Board name',
                 callback: async (value) => {
+                    this.app.spinner.show();
                     const newBoard = await backend.addBoard(value, category[0]);
+                    this.model.append('boards', newBoard);
+                    this.app.spinner.hide();
                 }
             });
             box.append(addBoard);
@@ -68,7 +71,10 @@ export class PageBoards extends Component {
             text: 'ADD NEW CATEGORY',
             placeholder: 'Category name',
             callback: async (value) => {
+                this.app.spinner.show();
                 const newCategory = await backend.addCategory(value);
+                this.model.append('categories', newCategory);
+                this.app.spinner.hide();
             }
         });
         addCategoryBox.append(addCategory);
