@@ -26,21 +26,19 @@ export class PageBoards extends Component {
         this.append(this.topbar);
 
         // Categories
-        this.model.get('categories').forEach(category => {
-            console.log('cat:', category);
+        this.model.get('categories').forEach(([categoryId, category]) => {
             const box = new Box({
-                title: '⇢ ' + category[1].name
+                title: '⇢ ' + category.name
             });
             // Boards
-            this.model.get('boards').forEach(board => {
-                console.log('board:', board);
-                if (board[1].categoryKey === category[0]) {
+            this.model.get('boards').forEach(([boardId, board]) => {
+                if (board.categoryKey === categoryId) {
                     const icon = new Component({
                         html: `
-                            <a href="?board=${board[0]}" target="_blank" class="board-link-a" data-board="${board[0]}">
+                            <a href="?board=${boardId}" target="_blank" class="board-link-a" data-board="${boardId}">
                                 <div class="board-link">
                                     <div class="board-link-date">dd.mm</div>
-                                    <div class="board-link-name">${board[1].name}</div>
+                                    <div class="board-link-name">${board.name}</div>
                                 </div>
                             </a>
                         `
@@ -56,7 +54,7 @@ export class PageBoards extends Component {
                 placeholder: 'Board name',
                 callback: async (value) => {
                     this.app.spinner.show();
-                    const newBoard = await backend.addBoard(value, category[0]);
+                    const newBoard = await backend.addBoard(value, categoryId);
                     this.model.append('boards', newBoard);
                     this.app.spinner.hide();
                 }
