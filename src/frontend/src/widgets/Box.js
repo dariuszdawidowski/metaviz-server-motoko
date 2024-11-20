@@ -1,5 +1,4 @@
 import { Component } from 'frontend/src/utils/Component.js';
-import { cleanString } from 'frontend/src/utils/Text.js';
 
 
 export class Box extends Component {

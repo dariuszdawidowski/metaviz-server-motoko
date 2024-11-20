@@ -250,9 +250,6 @@ body {
     color: var(--metaviz-color-cyan);
 }
 
-.right .addbox {
-}
-
 .right .click {
     margin: 8px 0 9px 4px;
 }
@@ -389,6 +386,20 @@ a .board-link, a:visited .board-link {
 
 .group-icon:hover, .user-icon:hover, .board-icon:hover {
     color: var(--metaviz-color-cyan);
+}
+
+/* Container */
+
+.container {
+    display: flex;
+}
+
+.container.horizontal {
+    flex-direction: row;
+}
+
+.container.vertical {
+    flex-direction: column;
 }
 
 /* Wizard */

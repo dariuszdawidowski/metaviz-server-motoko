@@ -1,9 +1,10 @@
 import { backend } from 'declarations/backend';
 import { Component } from 'frontend/src/utils/Component.js';
 import { Database } from 'frontend/src/utils/Model.js';
-import { Topbar } from 'frontend/src/widgets/Topbar.js'
 import { Addbox } from 'frontend/src/widgets/Addbox.js'
 import { Box } from 'frontend/src/widgets/Box.js'
+import { Container } from 'frontend/src/widgets/Container.js'
+import { Topbar } from 'frontend/src/widgets/Topbar.js'
 
 
 export class PageBoards extends Component {
@@ -33,9 +34,11 @@ export class PageBoards extends Component {
         this.db.table('categories').get().forEach(([categoryId, category]) => {
 
             // Category box
-            const box = new Box({
-                title: '⇢ ' + category.name
-            });
+            const box = new Box({ title: '⇢ ' + category.name });
+
+            // Pocket for boards
+            const boards = new Container({ direction: 'horizontal' });
+            box.append(boards);
 
             // Boards
             this.db.table('boards').get().forEach(([boardId, board]) => {
@@ -50,7 +53,7 @@ export class PageBoards extends Component {
                             </a>
                         `
                     });
-                    box.append(icon);
+                    boards.append(icon);
                 }
             });
             this.append(box);
@@ -63,6 +66,7 @@ export class PageBoards extends Component {
                     this.app.spinner.show();
                     const newBoard = await backend.addBoard(value, categoryId);
                     this.db.table('boards').append(newBoard);
+                    this.renderNewBoard(newBoard);
                     this.app.spinner.hide();
                 }
             });
@@ -79,6 +83,7 @@ export class PageBoards extends Component {
                 this.app.spinner.show();
                 const newCategory = await backend.addCategory(value);
                 this.db.table('categories').append(newCategory);
+                this.renderNewCategory(newCategory);
                 this.app.spinner.hide();
             }
         });
@@ -88,4 +93,11 @@ export class PageBoards extends Component {
 
     }
 
+    renderNewCategory(newCategory) {
+
+    }
+
+    renderNewBoard(newBoard) {
+        
+    }
 }
