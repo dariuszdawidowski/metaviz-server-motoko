@@ -10,28 +10,35 @@ export class PageBoards extends Component {
 
     constructor(args) {
         super(args);
+        this.db = new Database();
         this.fetch().then(() => this.build());
     }
 
     async fetch() {
-        this.db = new Database();
-        this.db.addTable('categories', await backend.getCategories());
-        this.db.addTable('boards', await backend.getBoards());
+        this.db.add('categories', await backend.getCategories());
+        this.db.add('boards', await backend.getBoards());
     }
 
     async build() {
+
+        // Database observers
+        this.db.table('categories').observer(() => console.log('category observer'));
+        this.db.table('boards').observer(() => console.log('boards observer'));
+
         // Topbar component
         this.topbar = new Topbar({text: `Your resources on x boards in x categories`});
         this.append(this.topbar);
 
         // Categories
-        this.db.getTable('categories').forEach(([categoryId, category]) => {
+        this.db.table('categories').get().forEach(([categoryId, category]) => {
+
+            // Category box
             const box = new Box({
                 title: '⇢ ' + category.name
             });
 
             // Boards
-            this.db.getTable('boards').forEach(([boardId, board]) => {
+            this.db.table('boards').get().forEach(([boardId, board]) => {
                 if (board.categoryKey === categoryId) {
                     const icon = new Component({
                         html: `
@@ -55,7 +62,7 @@ export class PageBoards extends Component {
                 callback: async (value) => {
                     this.app.spinner.show();
                     const newBoard = await backend.addBoard(value, categoryId);
-                    this.db.append('boards', newBoard);
+                    this.db.table('boards').append(newBoard);
                     this.app.spinner.hide();
                 }
             });
@@ -71,13 +78,13 @@ export class PageBoards extends Component {
             callback: async (value) => {
                 this.app.spinner.show();
                 const newCategory = await backend.addCategory(value);
-                this.db.getTable('categories').append(newCategory);
+                this.db.table('categories').append(newCategory);
                 this.app.spinner.hide();
             }
         });
         addCategoryBox.append(addCategory);
 
-        this.element.querySelector('#topbar-summary').innerText = `Your resources on ${this.db.getTable('boards').length} boards in ${this.db.getTable('categories').length} categories`;
+        this.element.querySelector('#topbar-summary').innerText = `Your resources on ${this.db.table('boards').length} boards in ${this.db.table('categories').length} categories`;
 
     }
 

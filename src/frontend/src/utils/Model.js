@@ -1,5 +1,5 @@
 /**
- * Model v 0.3.0
+ * Model v 0.4.0
  * Minimalistic model class (MVC) for JavaScript
  * Copyright (C) 2024 Dariusz Dawidowski
  * Licence: MIT
@@ -12,9 +12,9 @@ class Table {
      * Constructor
      */
 
-    constructor(name) {
+    constructor(name, data = null) {
         this.name = name;
-        this.data = null;
+        this.data = data;
         this.callback = null;
     }
 
@@ -24,10 +24,9 @@ class Table {
      */
 
     append(value) {
-        console.log('append', value)
         if (Array.isArray(this.data)) this.data.push(value);
         else if (typeof(this.data) == 'object') Object.assign(this.data, value);
-        if (callback) callback(value);
+        if (this.callback) this.callback();
     }
 
     /**
@@ -37,6 +36,14 @@ class Table {
 
     observer(callback) {
         this.callback = callback;
+    }
+
+    /**
+     * Get data
+     */
+
+    get() {
+        return this.data;
     }
 
 }
@@ -54,19 +61,19 @@ export class Database {
 
     /**
      * Add a new table
-     * table: table name
+     * name: table name
      */
 
-    addTable(name, data) {
-        this.tables[name] = data;
+    add(name, data) {
+        this.tables[name] = new Table(name, data);
     }
 
     /**
      * Get the table
-     * table: table name
+     * name: table name
      */
 
-    getTable(name) {
+    table(name) {
         return this.tables[name];
     }
 
