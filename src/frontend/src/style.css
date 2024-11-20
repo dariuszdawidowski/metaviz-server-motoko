@@ -229,6 +229,7 @@ body {
     background-color: white;
     padding: 20px;
     margin-bottom: 15px;
+    width: calc(100% - 40px);
 }
 
 .right .group h1 {
@@ -393,6 +394,7 @@ a .board-link, a:visited .board-link {
 .container {
     display: flex;
     flex-wrap: wrap;
+    width: 100%;
 }
 
 .container.horizontal {

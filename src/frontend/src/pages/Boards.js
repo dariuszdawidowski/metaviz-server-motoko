@@ -55,19 +55,15 @@ export class PageBoards extends Component {
                 text: 'ADD NEW BOARD',
                 placeholder: 'Board name',
                 callback: async (value) => {
-                    this.app.spinner.show();
-                    const newBoard = await backend.addBoard(value, categoryId);
-                    const icon = new BoardIcon({
-                        id: newBoard[0][0],
-                        name: newBoard[0][1].name,
-                        date: '00.00'
-                    });
-                    boards.append(icon);
-                    this.app.spinner.hide();
+                    await this.addNewBoard(boards, value, categoryId);
                 }
             });
             box.append(addBoard);
         });
+
+        // Pocket for new categories
+        const categories = new Container();
+        this.append(categories);
 
         // Add new category
         const addCategoryBox = new Box();
@@ -76,15 +72,46 @@ export class PageBoards extends Component {
             text: 'ADD NEW CATEGORY',
             placeholder: 'Category name',
             callback: async (value) => {
-                this.app.spinner.show();
-                const newCategory = await backend.addCategory(value);
-                this.app.spinner.hide();
+                await this.addNewCategory(categories, value);
             }
         });
         addCategoryBox.append(addCategory);
 
         this.element.querySelector('#topbar-summary').innerText = `Your resources on ${Object.keys(this.db.boards).length} boards in ${Object.keys(this.db.categories).length} categories`;
 
+    }
+
+    async addNewCategory(parent, name) {
+        this.app.spinner.show();
+        const newCategory = await backend.addCategory(name);
+        // New category box
+        const newCategoryBox = new Box({ title: '⇢ ' + newCategory[1].name });
+        // Pocket for boards
+        const boards = new Container({ direction: 'horizontal' });
+        newCategoryBox.append(boards);
+        // + Add board
+        const addBoard = new Addbox({
+            text: 'ADD NEW BOARD',
+            placeholder: 'Board name',
+            callback: async (value) => {
+                await this.addNewBoard(boards, value, newCategory[0]);
+            }
+        });
+        newCategoryBox.append(addBoard);
+        parent.append(newCategoryBox);
+        this.app.spinner.hide();
+    }
+
+    async addNewBoard(parent, name, categoryId) {
+        this.app.spinner.show();
+        const newBoard = await backend.addBoard(name, categoryId);
+        const icon = new BoardIcon({
+            id: newBoard[0][0],
+            name: newBoard[0][1].name,
+            date: '00.00'
+        });
+        parent.append(icon);
+        this.app.spinner.hide();
     }
 
 }
