@@ -3,6 +3,7 @@ import { Component } from 'frontend/src/utils/Component.js';
 import { Database } from 'frontend/src/utils/Model.js';
 import { Addbox } from 'frontend/src/widgets/Addbox.js'
 import { Box } from 'frontend/src/widgets/Box.js'
+import { BoardIcon } from 'frontend/src/widgets/BoardIcon.js'
 import { Container } from 'frontend/src/widgets/Container.js'
 import { Topbar } from 'frontend/src/widgets/Topbar.js'
 
@@ -43,15 +44,10 @@ export class PageBoards extends Component {
             // Boards
             this.db.table('boards').get().forEach(([boardId, board]) => {
                 if (board.categoryKey === categoryId) {
-                    const icon = new Component({
-                        html: `
-                            <a href="?board=${boardId}" target="_blank" class="board-link-a" data-board="${boardId}">
-                                <div class="board-link">
-                                    <div class="board-link-date">dd.mm</div>
-                                    <div class="board-link-name">${board.name}</div>
-                                </div>
-                            </a>
-                        `
+                    const icon = new BoardIcon({
+                        id: boardId,
+                        name: board.name,
+                        date: '00.00'
                     });
                     boards.append(icon);
                 }
@@ -66,7 +62,12 @@ export class PageBoards extends Component {
                     this.app.spinner.show();
                     const newBoard = await backend.addBoard(value, categoryId);
                     this.db.table('boards').append(newBoard);
-                    this.renderNewBoard(newBoard);
+                    const icon = new BoardIcon({
+                        id: newBoard[0][0],
+                        name: newBoard[0][1].name,
+                        date: '00.00'
+                    });
+                    boards.append(icon);
                     this.app.spinner.hide();
                 }
             });
@@ -83,7 +84,6 @@ export class PageBoards extends Component {
                 this.app.spinner.show();
                 const newCategory = await backend.addCategory(value);
                 this.db.table('categories').append(newCategory);
-                this.renderNewCategory(newCategory);
                 this.app.spinner.hide();
             }
         });
@@ -93,11 +93,4 @@ export class PageBoards extends Component {
 
     }
 
-    renderNewCategory(newCategory) {
-
-    }
-
-    renderNewBoard(newBoard) {
-        
-    }
 }

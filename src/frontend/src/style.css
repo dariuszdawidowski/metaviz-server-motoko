@@ -392,6 +392,7 @@ a .board-link, a:visited .board-link {
 
 .container {
     display: flex;
+    flex-wrap: wrap;
 }
 
 .container.horizontal {
