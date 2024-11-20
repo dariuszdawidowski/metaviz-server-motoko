@@ -1,49 +1,74 @@
 /**
- * Model v 0.2.0
+ * Model v 0.3.0
  * Minimalistic model class (MVC) for JavaScript
  * Copyright (C) 2024 Dariusz Dawidowski
  * Licence: MIT
  */
 
-export class Model {
+
+class Table {
 
     /**
-     * Contructor
-     * args: {key1: value1, key2: value2}
+     * Constructor
      */
 
-    constructor(args) {
-        this.var = args;
-        this.callbacks = {};
+    constructor(name) {
+        this.name = name;
+        this.data = null;
+        this.callback = null;
     }
 
     /**
      * Smart append new element to the array or object
-     * key: variable name
      * value: element to append
      */
 
-    append(key, value) {
-        if (Array.isArray(this.var[key])) this.var[key].push(value);
-        else if (typeof(this.var[key]) == 'object') Object.assign(this.var[key], value);
-    }
-
-    /**
-     * Getter
-     * key: variable name
-     */
-
-    get(key) {
-        return this.var[key];
+    append(value) {
+        console.log('append', value)
+        if (Array.isArray(this.data)) this.data.push(value);
+        else if (typeof(this.data) == 'object') Object.assign(this.data, value);
+        if (callback) callback(value);
     }
 
     /**
      * On change callback
-     * key: variable name
-     * callback: fn
+     * callback: fn (use null to disable)
      */
 
-    observer(key, callback) {
+    observer(callback) {
+        this.callback = callback;
     }
 
 }
+
+
+export class Database {
+
+    /**
+     * Constructor
+     */
+
+    constructor() {
+        this.tables = {};
+    }
+
+    /**
+     * Add a new table
+     * table: table name
+     */
+
+    addTable(name, data) {
+        this.tables[name] = data;
+    }
+
+    /**
+     * Get the table
+     * table: table name
+     */
+
+    getTable(name) {
+        return this.tables[name];
+    }
+
+}
+

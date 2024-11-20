@@ -1,7 +1,7 @@
 {
   "name": "frontend",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "module",
   "scripts": {
     "setup": "npm i && dfx canister create backend && dfx generate backend && mkdir -p ./lib && curl -L -o ./lib/internet_identity.did https://github.com/dfinity/internet-identity/releases/latest/download/internet_identity.did && curl -L -o ./lib/internet_identity_dev.wasm.gz https://github.com/dfinity/internet-identity/releases/latest/download/internet_identity_dev.wasm.gz && mops install && dfx deploy",
@@ -14,10 +14,10 @@
     "@testing-library/jest-dom": "^5.16.5",
     "cross-fetch": "^3.1.6",
     "dotenv": "^16.3.1",
-    "sass": "^1.63.6",
     "typescript": "^5.1.3",
     "vite": "^4.3.9",
     "vite-plugin-environment": "^1.1.3",
+    "vite-plugin-html": "^3.2.2",
     "vitest": "^0.32.2"
   },
   "dependencies": {

@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 import { fileURLToPath, URL } from 'url';
 import environment from 'vite-plugin-environment';
+import { createHtmlPlugin } from 'vite-plugin-html';
 import dotenv from 'dotenv';
 
 dotenv.config({ path: '../../.env' });
@@ -28,6 +29,14 @@ export default defineConfig({
   plugins: [
     environment("all", { prefix: "CANISTER_" }),
     environment("all", { prefix: "DFX_" }),
+    createHtmlPlugin({
+      minify: true,
+      inject: {
+        data: {
+          mvlibs: process.env.VITE_METAVIZ_LIBS
+        }
+      },
+    })
   ],
   resolve: {
     alias: [

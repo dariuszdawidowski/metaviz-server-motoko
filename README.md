@@ -21,6 +21,16 @@ Frontend refers to the admin and user panel, the diagram editor itself and other
 - Install NodeJS [Download](https://nodejs.org/en/download/)
 - Install MOPS [Website](https://mops.one/)
 
+## 🔧 Setup .env
+
+Add custor variables after # END DFX CANISTER ENVIRONMENT VARIABLES
+
+```bash
+CANISTER_PORT=8080
+VITE_METAVIZ_LIBS='local' # for local ./src/frontend/lib/*
+VITE_METAVIZ_LIBS='cdn' # for load from internet
+```
+
 ## 🐞 Troubleshooting on macOS
 
 If you encounter an error related to 'esbuild' - run dfx in the terminal using Rosetta x86 compatibility mode.
