@@ -27,43 +27,14 @@ export class PageBoards extends Component {
         this.topbar = new Topbar({text: `Your resources on x boards in x categories`});
         this.append(this.topbar);
 
+        // Pocket for new categories
+        const categories = new Container({ direction: 'vertical' });
+        this.append(categories);
+
         // Categories
         this.db.categories.forEach(([categoryId, category]) => {
-
-            // Category box
-            const box = new Box({ title: '⇢ ' + category.name });
-
-            // Pocket for boards
-            const boards = new Container({ direction: 'horizontal' });
-            box.append(boards);
-
-            // Boards
-            this.db.boards.forEach(([boardId, board]) => {
-                if (board.categoryKey === categoryId) {
-                    const icon = new BoardIcon({
-                        id: boardId,
-                        name: board.name,
-                        date: '00.00'
-                    });
-                    boards.append(icon);
-                }
-            });
-            this.append(box);
-
-            // Add new board
-            const addBoard = new Addbox({
-                text: 'ADD NEW BOARD',
-                placeholder: 'Board name',
-                callback: async (value) => {
-                    await this.addNewBoard(boards, value, categoryId);
-                }
-            });
-            box.append(addBoard);
+            this.renderCategory(categories, categoryId, category);
         });
-
-        // Pocket for new categories
-        const categories = new Container();
-        this.append(categories);
 
         // Add new category
         const addCategoryBox = new Box();
@@ -72,7 +43,7 @@ export class PageBoards extends Component {
             text: 'ADD NEW CATEGORY',
             placeholder: 'Category name',
             callback: async (value) => {
-                await this.addNewCategory(categories, value);
+                await this.addCategory(categories, value);
             }
         });
         addCategoryBox.append(addCategory);
@@ -81,37 +52,56 @@ export class PageBoards extends Component {
 
     }
 
-    async addNewCategory(parent, name) {
+    async addCategory(parent, name) {
         this.app.spinner.show();
         const newCategory = await backend.addCategory(name);
-        // New category box
-        const newCategoryBox = new Box({ title: '⇢ ' + newCategory[1].name });
+        this.renderCategory(parent, newCategory[0], newCategory[1]);
+        this.app.spinner.hide();
+    }
+
+    renderCategory(parent, categoryId, category) {
+
+        // Category box
+        const box = new Box({ title: '⇢ ' + category.name });
+
         // Pocket for boards
         const boards = new Container({ direction: 'horizontal' });
-        newCategoryBox.append(boards);
-        // + Add board
+        box.append(boards);
+
+        // Boards
+        this.db.boards.forEach(([boardId, board]) => {
+            if (board.categoryKey === categoryId) this.renderBoard(boards, boardId, board);
+        });
+
+        // Add new board
         const addBoard = new Addbox({
             text: 'ADD NEW BOARD',
             placeholder: 'Board name',
             callback: async (value) => {
-                await this.addNewBoard(boards, value, newCategory[0]);
+                await this.addBoard(boards, value, categoryId);
             }
         });
-        newCategoryBox.append(addBoard);
-        parent.append(newCategoryBox);
+        box.append(addBoard);
+
+        // Add to parent
+        parent.append(box);
+
+    }
+
+    async addBoard(parent, name, categoryId) {
+        this.app.spinner.show();
+        const newBoard = await backend.addBoard(name, categoryId);
+        this.renderBoard(parent, newBoard[0][0], newBoard[0][1]);
         this.app.spinner.hide();
     }
 
-    async addNewBoard(parent, name, categoryId) {
-        this.app.spinner.show();
-        const newBoard = await backend.addBoard(name, categoryId);
+    renderBoard(parent, boardId, board) {
         const icon = new BoardIcon({
-            id: newBoard[0][0],
-            name: newBoard[0][1].name,
+            id: boardId,
+            name: board.name,
             date: '00.00'
         });
         parent.append(icon);
-        this.app.spinner.hide();
     }
 
 }
