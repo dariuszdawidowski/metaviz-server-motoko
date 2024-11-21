@@ -84,23 +84,24 @@ actor {
         name: Text;
     };
 
-    // <principal string, User>
     let db_users = HashMap.HashMap<Text, User>(0, Text.equal, Text.hash);
 
     public query func getUsers() : async [(Text, User)] {
         return Iter.toArray<(Text, User)>(db_users.entries());
     };
 
-    public query func getUser(principal: Text) : async ?User {
-        return db_users.get(principal);
+    public query func getUser(key: Text) : async ?User {
+        return db_users.get(key);
     };
 
-    public shared func addUser(principal: Text, name: Text) : async (Text, User) {
+    public shared func addUser(name: Text) : async (Text, User) {
+        let g = Source.Source();
+        let uuid = UUID.toText(await g.new());
         let newUser : User = {
             name = name;
         };
-        db_users.put(principal, newUser);
-        return (principal, newUser);
+        db_users.put(uuid, newUser);
+        return (uuid, newUser);
     };
 
     public shared func delUser(principal: Text) : async () {

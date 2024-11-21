@@ -4,6 +4,7 @@ import { Addbox } from 'frontend/src/widgets/Addbox.js';
 import { Box } from 'frontend/src/widgets/Box.js';
 import { Container } from 'frontend/src/widgets/Container.js';
 import { Topbar } from 'frontend/src/widgets/Topbar.js';
+import { UserIcon } from 'frontend/src/widgets/UserIcon.js';
 
 
 export class PageUsers extends Component {
@@ -25,17 +26,24 @@ export class PageUsers extends Component {
         this.topbar = new Topbar({text: `Administration of x users`});
         this.append(this.topbar);
 
+        // Category box
+        const box = new Box({ title: '⇢ Users' });
+        this.append(box);
+
         // Pocket for users
         const users = new Container({ direction: 'horizontal' });
-        this.append(users);
+        box.append(users);
 
             // Users
-        this.db.users.forEach(([principal, user]) => {
+        this.db.users.forEach(([userId, user]) => {
+            const icon = new UserIcon({
+                id: userId,
+                name: user.name,
+            });
+            users.append(icon);
         });
 
         // Add new user
-        const addUserBox = new Box();
-        this.append(addUserBox);
         const addUser = new Addbox({
             text: 'ADD NEW USER',
             placeholder: 'User name',
@@ -43,7 +51,7 @@ export class PageUsers extends Component {
                 await this.addNewUser(users, value);
             }
         });
-        addUserBox.append(addUser);
+        box.append(addUser);
 
         this.element.querySelector('#topbar-summary').innerText = `Administration of ${0} users`;
 
@@ -51,11 +59,11 @@ export class PageUsers extends Component {
 
     async addNewUser(parent, name) {
         this.app.spinner.show();
-        const newUser = await backend.addUser('principal', name);
-        // const icon = new BoardUser({
-        //     principal: newUser[0],
-        //     name: newUser[1].name,
-        // });
+        const newUser = await backend.addUser(name);
+        const icon = new UserIcon({
+            id: newUser[0],
+            name: newUser[1].name,
+        });
         parent.append(icon);
         this.app.spinner.hide();
     }
