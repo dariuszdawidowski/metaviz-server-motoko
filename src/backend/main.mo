@@ -104,8 +104,72 @@ actor {
         return (uuid, newUser);
     };
 
-    public shared func delUser(principal: Text) : async () {
-        db_users.delete(principal);
+    public shared func delUser(key: Text) : async () {
+        db_users.delete(key);
+    };
+
+    /*** Database for ORGANIZATIONS ***/
+
+    type Organization = {
+        name: Text;
+    };
+
+    let db_organizations = HashMap.HashMap<Text, Organization>(0, Text.equal, Text.hash);
+
+    public query func getOrganizations() : async [(Text, Organization)] {
+        return Iter.toArray<(Text, Organization)>(db_organizations.entries());
+    };
+
+    public query func getOrganization(key: Text) : async ?Organization {
+        return db_organizations.get(key);
+    };
+
+    public shared func addOrganization(name: Text) : async (Text, Organization) {
+        let g = Source.Source();
+        let uuid = UUID.toText(await g.new());
+        let newOrganization : Organization = {
+            name = name;
+        };
+        db_organizations.put(uuid, newOrganization);
+        return (uuid, newOrganization);
+    };
+
+    public shared func delOrganization(key: Text) : async () {
+        db_organizations.delete(key);
+    };
+
+    /*** Database for GROUPS ***/
+
+    type Group = {
+        name: Text;
+        organization: Text;
+    };
+
+    let db_groups = HashMap.HashMap<Text, Group>(0, Text.equal, Text.hash);
+
+    public query func getGroups() : async [(Text, Group)] {
+        return Iter.toArray<(Text, Group)>(db_groups.entries());
+    };
+
+    public query func getGroup(key: Text) : async ?Group {
+        return db_groups.get(key);
+    };
+
+    public shared func addGroup(name: Text, organizationKey: Text) : async ?(Text, Group) {
+        let org = await getOrganization(organizationKey);
+        if (org == null) return null;
+        let g = Source.Source();
+        let uuid = UUID.toText(await g.new());
+        let newGroup : Group = {
+            name = name;
+            organization = organizationKey;
+        };
+        db_groups.put(uuid, newGroup);
+        return ?(uuid, newGroup);
+    };
+
+    public shared func delGroup(key: Text) : async () {
+        db_groups.delete(key);
     };
 
 };
