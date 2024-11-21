@@ -34,13 +34,9 @@ export class PageUsers extends Component {
         const users = new Container({ direction: 'horizontal' });
         box.append(users);
 
-            // Users
+        // Users
         this.db.users.forEach(([userId, user]) => {
-            const icon = new UserIcon({
-                id: userId,
-                name: user.name,
-            });
-            users.append(icon);
+            this.renderUser(users, userId, user);
         });
 
         // Add new user
@@ -48,24 +44,29 @@ export class PageUsers extends Component {
             text: 'ADD NEW USER',
             placeholder: 'User name',
             callback: async (value) => {
-                await this.addNewUser(users, value);
+                await this.addUser(users, value);
             }
         });
         box.append(addUser);
 
+        // Update topbar info
         this.element.querySelector('#topbar-summary').innerText = `Administration of ${0} users`;
 
     }
 
-    async addNewUser(parent, name) {
+    async addUser(parent, name) {
         this.app.spinner.show();
         const newUser = await backend.addUser(name);
+        this.renderUser(parent, newUser[0], newUser[1]);
+        this.app.spinner.hide();
+    }
+
+    renderUser(parent, userId, user) {
         const icon = new UserIcon({
-            id: newUser[0],
-            name: newUser[1].name,
+            id: userId,
+            name: user.name,
         });
         parent.append(icon);
-        this.app.spinner.hide();
     }
 
 }
