@@ -29,11 +29,12 @@ export default defineConfig({
   plugins: [
     environment("all", { prefix: "CANISTER_" }),
     environment("all", { prefix: "DFX_" }),
+    environment("all", { prefix: "METAVIZ_" }),
     createHtmlPlugin({
       minify: true,
       inject: {
         data: {
-          mvlibs: process.env.VITE_METAVIZ_LIBS
+          mvlibs: process.env.METAVIZ_LIBS
         }
       },
     })

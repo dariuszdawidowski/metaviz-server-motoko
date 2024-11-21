@@ -23,12 +23,12 @@ Frontend refers to the admin and user panel, the diagram editor itself and other
 
 ## 🔧 Setup .env
 
-Add custor variables after # END DFX CANISTER ENVIRONMENT VARIABLES
+Add custom variables after # END DFX CANISTER ENVIRONMENT VARIABLES in the .env file.
 
 ```bash
 CANISTER_PORT=8080
-VITE_METAVIZ_LIBS='local' # for local ./src/frontend/lib/*
-VITE_METAVIZ_LIBS='cdn' # for load from internet
+METAVIZ_LIBS='local' # 'local' for ./src/frontend/lib/* | 'cdn' for load from internet
+METAVIZ_DEMO='true' # 'true' behave as public demo | 'false'
 ```
 
 ## 🐞 Troubleshooting on macOS
