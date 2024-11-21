@@ -1,7 +1,7 @@
 import Text "mo:base/Text";
 import Iter "mo:base/Iter";
 import HashMap "mo:base/HashMap";
-//import Principal "mo:base/Principal";
+import Principal "mo:base/Principal";
 import Source "mo:uuid/async/SourceV4";
 import UUID "mo:uuid/UUID";
 //import Debug "mo:base/Debug";
@@ -76,6 +76,35 @@ actor {
 
     public shared func delBoard(key: Text) : async () {
         db_boards.delete(key);
+    };
+
+    /*** Database for USERS ***/
+
+    type User = {
+        name: Text;
+    };
+
+    // <principal string, User>
+    let db_users = HashMap.HashMap<Text, User>(0, Text.equal, Text.hash);
+
+    public query func getUsers() : async [(Text, User)] {
+        return Iter.toArray<(Text, User)>(db_users.entries());
+    };
+
+    public query func getUser(principal: Text) : async ?User {
+        return db_users.get(principal);
+    };
+
+    public shared func addUser(principal: Text, name: Text) : async (Text, User) {
+        let newUser : User = {
+            name = name;
+        };
+        db_users.put(principal, newUser);
+        return (principal, newUser);
+    };
+
+    public shared func delUser(principal: Text) : async () {
+        db_users.delete(principal);
     };
 
 };
