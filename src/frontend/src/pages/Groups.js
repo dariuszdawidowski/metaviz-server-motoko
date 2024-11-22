@@ -5,6 +5,7 @@ import { Box } from 'frontend/src/widgets/Box.js';
 import { Container } from 'frontend/src/widgets/Container.js';
 import { Topbar } from 'frontend/src/widgets/Topbar.js';
 import { UserIcon } from 'frontend/src/widgets/UserIcon.js';
+import { BoardIcon } from 'frontend/src/widgets/BoardIcon.js';
 import { OrganizationIcon } from 'frontend/src/widgets/OrganizationIcon.js';
 
 
@@ -22,6 +23,7 @@ export class PageGroups extends Component {
             users: await backend.getUsers(),
             boards: await backend.getBoards(),
             usersInGroups: await backend.getUsersInGroups(),
+            boardsInGroups: await backend.getBoardsInGroups(),
         };
     }
 
@@ -108,10 +110,10 @@ export class PageGroups extends Component {
         const users = new Container({ direction: 'horizontal' });
         groupBox.append(users);
 
-        // Users list
+        // Assigned users list
         this.db.usersInGroups.forEach(([id, userInGroup]) => {
             if (userInGroup.group == groupId) {
-                const user = this.getUser(userInGroup.user)
+                const user = this.getUser(userInGroup.user);
                 if (user) this.renderUser(users, userInGroup.user, user);
             }
         });
@@ -124,7 +126,7 @@ export class PageGroups extends Component {
             callback: async (value) => {
                 this.app.spinner.show();
                 await backend.addUserToGroup(value, groupId);
-                const user = this.getUser(value)
+                const user = this.getUser(value);
                 if (user) this.renderUser(users, value, user);
                 this.app.spinner.hide();
             }
@@ -135,13 +137,25 @@ export class PageGroups extends Component {
         const boards = new Container({ direction: 'horizontal' });
         groupBox.append(boards);
 
+        // Assigned boards list
+        this.db.boardsInGroups.forEach(([id, boardInGroup]) => {
+            if (boardInGroup.group == groupId) {
+                const board = this.getBoard(boardInGroup.board);
+                if (board) this.renderBoard(boards, boardInGroup.board, board);
+            }
+        });
+
         // + Assign board
         const assignBoard = new Addbox({
             text: 'ASSIGN BOARD',
             placeholder: 'Search for board name',
             list: this.db.boards.reduce((acc, [key, value]) => { acc[key] = value.name; return acc; }, {}),
             callback: async (value) => {
-                console.log(value)
+                this.app.spinner.show();
+                await backend.addBoardToGroup(value, groupId);
+                const board = this.getBoard(value);
+                if (board) this.renderBoard(boards, value, board);
+                this.app.spinner.hide();
             }
         });
         groupBox.append(assignBoard);
@@ -162,6 +176,22 @@ export class PageGroups extends Component {
         const icon = new UserIcon({
             id: userId,
             name: user.name,
+        });
+        parent.append(icon);
+    }
+
+    getBoard(boardId) {
+        for (const entry of this.db.boards) {
+            if (entry[0] == boardId) return entry[1];
+        }
+        return null;
+    }
+
+    renderBoard(parent, boardId, board) {
+        const icon = new BoardIcon({
+            type: 'assigned',
+            id: boardId,
+            name: board.name,
         });
         parent.append(icon);
     }

@@ -216,4 +216,48 @@ actor {
         }
     };
 
+    /*** Database for BOARDS in GROUPS ***/
+
+    type BoardGroup = {
+        board: Text;
+        group: Text;
+    };
+
+    let db_boards_groups = HashMap.HashMap<Text, BoardGroup>(0, Text.equal, Text.hash);
+
+    public query func getBoardsInGroups() : async [(Text, BoardGroup)] {
+        return Iter.toArray<(Text, BoardGroup)>(db_boards_groups.entries());
+    };
+
+    public query func getBoardInGroup(boardKey: Text, groupKey: Text) : async ?Text {
+        for ((key, value) in db_boards_groups.entries()) {
+            if (value.board == boardKey and value.group == groupKey) {
+                return ?key;
+            }
+        };
+        return null;
+    };
+
+    public shared func addBoardToGroup(boardKey: Text, groupKey: Text) : async () {
+        let board = await getBoard(boardKey);
+        let group = await getGroup(groupKey);
+        if (board != null and group != null) {
+            let g = Source.Source();
+            let uuid = UUID.toText(await g.new());
+            let newBoardGroup : BoardGroup = {
+                board = boardKey;
+                group = groupKey;
+            };
+            db_boards_groups.put(uuid, newBoardGroup);            
+        }
+    };
+
+    public shared func delBoardFromGroup(boardKey: Text, groupKey: Text) : async () {
+        let key = await getBoardInGroup(boardKey, groupKey);
+        switch (key) {
+            case (null) { };
+            case (?text) { db_boards_groups.delete(text) };
+        }
+    };
+
 };
