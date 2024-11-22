@@ -4,7 +4,7 @@ import HashMap "mo:base/HashMap";
 import Principal "mo:base/Principal";
 import Source "mo:uuid/async/SourceV4";
 import UUID "mo:uuid/UUID";
-//import Debug "mo:base/Debug";
+import Debug "mo:base/Debug";
 
 actor {
 
@@ -170,6 +170,50 @@ actor {
 
     public shared func delGroup(key: Text) : async () {
         db_groups.delete(key);
+    };
+
+    /*** Database for USERS in GROUPS ***/
+
+    type UserGroup = {
+        user: Text;
+        group: Text;
+    };
+
+    let db_users_groups = HashMap.HashMap<Text, UserGroup>(0, Text.equal, Text.hash);
+
+    public query func getUsersInGroups() : async [(Text, UserGroup)] {
+        return Iter.toArray<(Text, UserGroup)>(db_users_groups.entries());
+    };
+
+    public query func getUserInGroup(userKey: Text, groupKey: Text) : async ?Text {
+        for ((key, value) in db_users_groups.entries()) {
+            if (value.user == userKey and value.group == groupKey) {
+                return ?key;
+            }
+        };
+        return null;
+    };
+
+    public shared func addUserToGroup(userKey: Text, groupKey: Text) : async () {
+        let user = await getUser(userKey);
+        let group = await getGroup(groupKey);
+        if (user != null and group != null) {
+            let g = Source.Source();
+            let uuid = UUID.toText(await g.new());
+            let newUserGroup : UserGroup = {
+                user = userKey;
+                group = groupKey;
+            };
+            db_users_groups.put(uuid, newUserGroup);            
+        }
+    };
+
+    public shared func delUserFromGroup(userKey: Text, groupKey: Text) : async () {
+        let key = await getUserInGroup(userKey, groupKey);
+        switch (key) {
+            case (null) { };
+            case (?text) { db_users_groups.delete(text) };
+        }
     };
 
 };

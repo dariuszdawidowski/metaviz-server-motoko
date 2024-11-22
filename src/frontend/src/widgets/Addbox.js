@@ -1,8 +1,20 @@
+/**
+ * Input field with label and OK button plus optional search list
+ */
+
 import { Component } from 'frontend/src/utils/Component.js';
 import { cleanString } from 'frontend/src/utils/Text.js';
 
 
 export class Addbox extends Component {
+
+    /**
+     * Constructor
+     * args.text: label
+     * args.placeholder: text inside input
+     * args.callback: function on ok
+     * args.list: predefined values 'name' - name of existing datalist in html | ['foo', 'bar', ...] list to generate
+     */
 
     constructor(args) {
         super(args);
@@ -31,7 +43,26 @@ export class Addbox extends Component {
 
         this.input = document.createElement('input');
         if ('placeholder' in args) this.input.setAttribute('placeholder', args.placeholder);
-        if ('list' in args) this.input.setAttribute('list', args.list);
+        if ('list' in args) {
+            // Name of a datalist somewhere in the html
+            if (typeof(args.list) == 'string') {
+                this.input.setAttribute('list', args.list);
+            }
+            // Generate datalist
+            else {
+                const datalistId = `list-${crypto.randomUUID()}`;
+                const datalist = document.createElement('datalist');
+                datalist.id = datalistId;
+                Object.entries(args.list).forEach(([value, name]) => {
+                    const option = document.createElement('option');
+                    option.setAttribute('value', value);
+                    option.innerText = name;
+                    datalist.append(option);
+                });
+                this.inputWrap.append(datalist);
+                this.input.setAttribute('list', datalistId);
+            }
+        }
         this.inputWrap.append(this.input);
 
         this.ok = document.createElement('button');
