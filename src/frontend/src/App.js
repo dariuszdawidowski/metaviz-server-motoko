@@ -63,7 +63,7 @@ export default class MetavizApp extends Router {
 
         // Register
         else if (path == '/auth/register/') {
-            const register = new PageRegister({app: this});
+            const register = new PageRegister({app: this, user: params.user, token: params.token});
             this.page(register);
         }
 
@@ -128,7 +128,8 @@ export default class MetavizApp extends Router {
 
     /*** Internet Identity ***/
 
-    async assignII() {
+    async assignII(userId, token) {
+        console.log('assignII', userId, token);
     }
 
     async loginII() {

@@ -34,6 +34,10 @@ actor {
         return uuid;
     };
 
+    public query (message) func getRegister(key: Text) : async ?Register {
+        return db_register.get(key);
+    };
+
     /*** Database for CATEGORIES ***/
 
     type Category = {
@@ -104,6 +108,7 @@ actor {
 
     type User = {
         name: Text;
+        principal: ?Text;
     };
 
     let db_users = HashMap.HashMap<Text, User>(0, Text.equal, Text.hash);
@@ -121,9 +126,23 @@ actor {
         let uuid = UUID.toText(await g.new());
         let newUser : User = {
             name = name;
+            principal = null;
         };
         db_users.put(uuid, newUser);
         return (uuid, newUser);
+    };
+
+    public shared (message) func assignUser(userKey: Text, token: Text) : async ?Text {
+        let ?register = await getRegister(token);
+        if (register.userKey == userKey) {
+            let user = await getUser(register.userKey);
+            let twentyFourHours : Time.Time = 24 * 60 * 60 * 1_000_000_000;
+            if (Time.now() - register.timestamp < twentyFourHours) {
+                // user update Principal.toText(message.caller)
+                return ?"Principal";
+            };
+        };
+        return null;
     };
 
     public shared (message) func delUser(key: Text) : async () {

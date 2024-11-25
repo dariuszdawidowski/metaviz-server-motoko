@@ -30,7 +30,11 @@ export class PageRegister extends Component {
         });
 
         this.element.querySelector('#login-ii').addEventListener('click', () => {
-            this.app.assignII();
+            this.app.loginII().then(() => this.app.loggedII().then(() => {
+                this.app.assignII(args.user, args.token).then(() => {
+                    this.app.url('/dashboard/boards/');
+                });
+            }));
         });
 
         this.element.querySelector('#about-ii').addEventListener('click', () => {
