@@ -134,7 +134,7 @@ export default class MetavizApp extends Router {
     async loginII() {
         await new Promise((resolve) => {
             this.authClient.login({
-                identityProvider: `http://${process.env.CANISTER_ID_INTERNET_IDENTITY}.localhost:${process.env.CANISTER_PORT}/`,
+                identityProvider: this.getIIURL(),
                 onSuccess: resolve,
             });
         });
@@ -170,6 +170,16 @@ export default class MetavizApp extends Router {
 
     aboutNFID() {
         console.log('about NFID');
+    }
+
+    /*** Get URLs ***/
+
+    getFrontendURL() {
+        return `http://${process.env.CANISTER_ID_FRONTEND}.localhost:${process.env.CANISTER_PORT}`;
+    }
+
+    getIIURL() {
+        return `http://${process.env.CANISTER_ID_INTERNET_IDENTITY}.localhost:${process.env.CANISTER_PORT}`;
     }
 
 }

@@ -11,7 +11,7 @@ export class UserIcon extends Component {
         super({...
             args,
             html: `
-                <div class="user-icon" data-user="${args.id}">
+                <div class="user-icon" data-user-id="${args.id}" data-user-name="${args.name}">
                     <span class="mdi mdi-account"></span>
                     <div class="user-name">${args.name}</div>
                 </div>
