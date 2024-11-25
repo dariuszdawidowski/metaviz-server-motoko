@@ -1,6 +1,6 @@
 import { Component } from 'frontend/src/utils/Component.js';
 
-export class PageLogin extends Component {
+export class PageRegister extends Component {
 
     constructor(args) {
         super({
@@ -9,7 +9,7 @@ export class PageLogin extends Component {
                 <div class="panel">
                     <div class="midframe">
                         <img class="metaviz-logo" src="/metaviz-mark-colorful.svg" width="64" height="64" style="margin-bottom: 6px;">
-                        <div class="info">Select a login method:</div>
+                        <div class="info">Assign your user to one of the following login methods:</div>
                         <div class="login-buttons">
                             <button id="login-ii">
                                 <img src="/ICP.svg" width="40" style="margin-right: 10px">
@@ -30,9 +30,7 @@ export class PageLogin extends Component {
         });
 
         this.element.querySelector('#login-ii').addEventListener('click', () => {
-            this.app.loginII().then(() => this.app.loggedII().then(() => {
-                this.app.url('/dashboard/boards/');
-            }));
+            this.app.assignII();
         });
 
         this.element.querySelector('#about-ii').addEventListener('click', () => {
@@ -40,7 +38,7 @@ export class PageLogin extends Component {
         });
 
         this.element.querySelector('#login-nfid').addEventListener('click', () => {
-            this.app.loginNFID();
+            this.app.assignNFID();
         });
 
         this.element.querySelector('#about-nfid').addEventListener('click', () => {

@@ -7,6 +7,7 @@ import { Router } from 'frontend/src/utils/Router.js';
 import { Spinner } from 'frontend/src/widgets/Spinner.js';
 import { Dashboard } from 'frontend/src/pages/Dashboard.js';
 import { PageLogin } from 'frontend/src/pages/Login.js';
+import { PageRegister } from 'frontend/src/pages/Register.js';
 import { Page404 } from 'frontend/src/pages/404.js';
 
 
@@ -28,11 +29,31 @@ export default class MetavizApp extends Router {
         // Spiner
         this.spinner = new Spinner();
 
-        // Authorize
-        this.auth();
+        // Authorize and trigger the router first time
+        this.auth().then(() => window.dispatchEvent(new Event('urlchange')));
     }
 
+    /**
+     * Route URL to method
+     */
+
     router(path, params) {
+
+        /* Redirect */
+
+        // Login
+        if (!this.isLoggedIn() && path == '/') {
+            path = '/auth/login/';
+            window.history.replaceState({}, '', path);
+        }
+
+        // Dashboard
+        else if (this.isLoggedIn() && path == '/') {
+            path = '/dashboard/boards/';
+            window.history.replaceState({}, '', path);
+        }
+
+        /* Route */
 
         // Login
         if (path == '/auth/login/') {
@@ -40,9 +61,15 @@ export default class MetavizApp extends Router {
             this.page(login);
         }
 
+        // Register
+        else if (path == '/auth/register/') {
+            const register = new PageRegister({app: this});
+            this.page(register);
+        }
+
         // Logout
         else if (path == '/auth/logout/') {
-            this.logoutII();
+            this.logoutII().then(() => this.url('/auth/login/'));
         }
 
         // Dashboard
@@ -62,24 +89,46 @@ export default class MetavizApp extends Router {
 
     }
 
+    /**
+     * Render page component
+     */
+
     page(component) {
         this.main.innerHTML = '';
         this.main.append(component.element);
     }
+
+    /**
+     * Switch URL
+     */
 
     url(path) {
         window.history.replaceState({}, '', path);
         window.dispatchEvent(new Event('urlchange'));
     }
 
+    /**
+     * Authorize
+     */
+
     async auth() {
         this.authClient = await AuthClient.create();
         if (await this.authClient.isAuthenticated()) {
-            this.loggedII();
+            await this.loggedII();
         }
-        else {
-            this.url('/auth/login/');
-        }
+    }
+
+    /**
+     * User logged in
+     */
+
+    isLoggedIn() {
+        return (this.identity && this.agent && this.actor);
+    }
+
+    /*** Internet Identity ***/
+
+    async assignII() {
     }
 
     async loginII() {
@@ -89,19 +138,25 @@ export default class MetavizApp extends Router {
                 onSuccess: resolve,
             });
         });
-        await this.loggedII();
     }
 
     async loggedII() {
         this.identity = this.authClient.getIdentity();
         this.agent = await HttpAgent.create({ identity: this.identity });
         this.actor = createActor(process.env.CANISTER_ID_BACKEND, { agent: this.agent });
-        if (this.identity && this.agent && this.actor) this.url('/dashboard/boards/');
     }
 
     async logoutII() {
         await this.authClient.logout();
-        this.url('/auth/login/');
+    }
+
+    aboutII() {
+        console.log('about II');
+    }
+
+    /*** NFID ***/
+
+    async assignNFID() {
     }
 
     async loginNFID() {
@@ -111,6 +166,10 @@ export default class MetavizApp extends Router {
     }
 
     async logoutNFID() {
+    }
+
+    aboutNFID() {
+        console.log('about NFID');
     }
 
 }
