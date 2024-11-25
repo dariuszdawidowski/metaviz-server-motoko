@@ -1,4 +1,3 @@
-import { backend } from 'declarations/backend';
 import { Component } from 'frontend/src/utils/Component.js';
 import { Addbox } from 'frontend/src/widgets/Addbox.js';
 import { Box } from 'frontend/src/widgets/Box.js';
@@ -18,12 +17,12 @@ export class PageGroups extends Component {
 
     async fetch() {
         this.db = {
-            organizations: await backend.getOrganizations(),
-            groups: await backend.getGroups(),
-            users: await backend.getUsers(),
-            boards: await backend.getBoards(),
-            usersInGroups: await backend.getUsersInGroups(),
-            boardsInGroups: await backend.getBoardsInGroups(),
+            organizations: await this.app.actor.getOrganizations(),
+            groups: await this.app.actor.getGroups(),
+            users: await this.app.actor.getUsers(),
+            boards: await this.app.actor.getBoards(),
+            usersInGroups: await this.app.actor.getUsersInGroups(),
+            boardsInGroups: await this.app.actor.getBoardsInGroups(),
         };
     }
 
@@ -60,7 +59,7 @@ export class PageGroups extends Component {
 
     async addOrganization(parent, name) {
         this.app.spinner.show();
-        const newOrganization = await backend.addOrganization(name);
+        const newOrganization = await this.app.actor.addOrganization(name);
         this.renderOrganization(parent, newOrganization[0], newOrganization[1]);
         this.app.spinner.hide();
     }
@@ -96,7 +95,7 @@ export class PageGroups extends Component {
 
     async addGroup(parent, name, organizationId) {
         this.app.spinner.show();
-        const newGroup = await backend.addGroup(name, organizationId);
+        const newGroup = await this.app.actor.addGroup(name, organizationId);
         this.renderGroup(parent, newGroup[0][0], newGroup[0][1]);
         this.app.spinner.hide();
     }
@@ -125,7 +124,7 @@ export class PageGroups extends Component {
             list: this.db.users.reduce((acc, [key, value]) => { acc[key] = value.name; return acc; }, {}),
             callback: async (value) => {
                 this.app.spinner.show();
-                await backend.addUserToGroup(value, groupId);
+                await this.app.actor.addUserToGroup(value, groupId);
                 const user = this.getUser(value);
                 if (user) this.renderUser(users, value, user);
                 this.app.spinner.hide();
@@ -152,7 +151,7 @@ export class PageGroups extends Component {
             list: this.db.boards.reduce((acc, [key, value]) => { acc[key] = value.name; return acc; }, {}),
             callback: async (value) => {
                 this.app.spinner.show();
-                await backend.addBoardToGroup(value, groupId);
+                await this.app.actor.addBoardToGroup(value, groupId);
                 const board = this.getBoard(value);
                 if (board) this.renderBoard(boards, value, board);
                 this.app.spinner.hide();

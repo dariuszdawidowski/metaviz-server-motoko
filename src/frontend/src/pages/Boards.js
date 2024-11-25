@@ -1,4 +1,3 @@
-import { backend } from 'declarations/backend';
 import { Component } from 'frontend/src/utils/Component.js';
 import { Addbox } from 'frontend/src/widgets/Addbox.js';
 import { Box } from 'frontend/src/widgets/Box.js';
@@ -16,8 +15,8 @@ export class PageBoards extends Component {
 
     async fetch() {
         this.db = {
-            categories: await backend.getCategories(),
-            boards: await backend.getBoards()
+            categories: await this.app.actor.getCategories(),
+            boards: await this.app.actor.getBoards()
         };
     }
 
@@ -54,7 +53,7 @@ export class PageBoards extends Component {
 
     async addCategory(parent, name) {
         this.app.spinner.show();
-        const newCategory = await backend.addCategory(name);
+        const newCategory = await this.app.actor.addCategory(name);
         this.renderCategory(parent, newCategory[0], newCategory[1]);
         this.app.spinner.hide();
     }
@@ -90,7 +89,7 @@ export class PageBoards extends Component {
 
     async addBoard(parent, name, categoryId) {
         this.app.spinner.show();
-        const newBoard = await backend.addBoard(name, categoryId);
+        const newBoard = await this.app.actor.addBoard(name, categoryId);
         this.renderBoard(parent, newBoard[0][0], newBoard[0][1]);
         this.app.spinner.hide();
     }

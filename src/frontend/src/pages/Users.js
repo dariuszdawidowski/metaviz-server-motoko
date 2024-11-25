@@ -1,4 +1,3 @@
-import { backend } from 'declarations/backend';
 import { Component } from 'frontend/src/utils/Component.js';
 import { Addbox } from 'frontend/src/widgets/Addbox.js';
 import { Box } from 'frontend/src/widgets/Box.js';
@@ -16,7 +15,7 @@ export class PageUsers extends Component {
 
     async fetch() {
         this.db = {
-            users: await backend.getUsers(),
+            users: await this.app.actor.getUsers(),
         };
     }
 
@@ -56,7 +55,7 @@ export class PageUsers extends Component {
 
     async addUser(parent, name) {
         this.app.spinner.show();
-        const newUser = await backend.addUser(name);
+        const newUser = await this.app.actor.addUser(name);
         this.renderUser(parent, newUser[0], newUser[1]);
         this.app.spinner.hide();
     }
