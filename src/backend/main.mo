@@ -4,13 +4,35 @@ import HashMap "mo:base/HashMap";
 import Principal "mo:base/Principal";
 import Source "mo:uuid/async/SourceV4";
 import UUID "mo:uuid/UUID";
-import Debug "mo:base/Debug";
+import Time "mo:base/Time";
+// import Debug "mo:base/Debug";
+
 
 actor {
 
     //public query (message) func greet() : async Text {
     //    return "Hello, " # Principal.toText(message.caller) # "!";
     //};
+
+    /*** Database for REGISTER USERS ***/
+
+    type Register = {
+        userKey: Text;
+        timestamp: Time.Time;
+    };
+
+    let db_register = HashMap.HashMap<Text, Register>(0, Text.equal, Text.hash);
+
+    public shared (message) func addRegister(userKey: Text) : async Text {
+        let g = Source.Source();
+        let uuid = UUID.toText(await g.new());
+        let newRegister : Register = {
+            userKey = userKey;
+            timestamp = Time.now();
+        };
+        db_register.put(uuid, newRegister);
+        return uuid;
+    };
 
     /*** Database for CATEGORIES ***/
 

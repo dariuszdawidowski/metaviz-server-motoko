@@ -17,7 +17,6 @@ export class PageUsers extends Component {
             id: null,
             name: null,
             valid: function() {
-                console.log('valid', this.id, this.name)
                 return (this.id != null && this.name != null);
             }
         };
@@ -95,9 +94,9 @@ export class PageUsers extends Component {
             parent: 'root',
             id: 'register-user',
             name: '🔗 Generate register link',
-            onClick: () => {
-                const token = 123;
-                alert(`Link to register user ${this.selected.name}: ${this.app.getFrontendURL()}/auth/register/?token=${token}`);
+            onClick: async () => {
+                const token = await this.app.actor.addRegister(this.selected.id);
+                alert(`Link to register user ${this.selected.name}: ${this.app.getFrontendURL()}/auth/register/?user=${this.selected.id}&token=${token}`);
             }
         });
         menuUser.addItem({
