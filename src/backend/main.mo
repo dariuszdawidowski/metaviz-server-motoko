@@ -83,12 +83,14 @@ actor {
 
     public shared (message) func getBoards() : async [(Text, Board)] {
         let user_boards = HashMap.HashMap<Text, Board>(0, Text.equal, Text.hash);
-        let user_id = await getUserIdByPrincipal(Principal.toText(message.caller));
-        switch (user_id) {
+        let user = await getUserByPrincipal(Principal.toText(message.caller));
+        switch (user) {
             case (null) { };
-            case (?id) {
-                let user_groups = await getUserGroups(id);
-                // Debug.print("Groups" # debug_show(user_groups));
+            case (?usr) {
+                // Admin
+                if (usr.1.role == 1) return Iter.toArray<(Text, Board)>(db_boards.entries());
+                // User
+                let user_groups = await getUserGroups(usr.0);
                 for ((boardKey, boardValue) in db_boards.entries()) {
                     for (groupKey in user_groups.vals()) {
                         let is_in_group = await getBoardInGroup(boardKey, groupKey);
@@ -126,6 +128,7 @@ actor {
     type User = {
         name: Text;
         principal: Text;
+        role: Nat; // 0 = user 1 = admin
     };
 
     let db_users = HashMap.HashMap<Text, User>(0, Text.equal, Text.hash);
@@ -138,9 +141,9 @@ actor {
         return db_users.get(key);
     };
 
-    public query (message) func getUserIdByPrincipal(principal: Text) : async ?Text {
+    public query (message) func getUserByPrincipal(principal: Text) : async ?(Text, User) {
         for ((key, value) in db_users.entries()) {
-            if (value.principal == principal) return ?key;
+            if (value.principal == principal) return ?(key, value);
         };
         return null;
     };
@@ -150,7 +153,8 @@ actor {
         let uuid = UUID.toText(await g.new());
         let newUser : User = {
             name = name;
-            principal = "";
+            principal = if (db_users.size() == 0) { Principal.toText(message.caller) } else { "" };
+            role = if (db_users.size() == 0) { 1 } else { 0 };
         };
         db_users.put(uuid, newUser);
         return (uuid, newUser);
@@ -166,6 +170,7 @@ actor {
                 let updUser : User = {
                     name = user.name;
                     principal = principal;
+                    role = user.role;
                 };
                 ignore db_users.replace(register.userKey, updUser);
                 return ?principal;
