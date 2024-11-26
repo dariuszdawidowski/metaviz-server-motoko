@@ -108,7 +108,7 @@ actor {
 
     type User = {
         name: Text;
-        principal: ?Text;
+        principal: Text;
     };
 
     let db_users = HashMap.HashMap<Text, User>(0, Text.equal, Text.hash);
@@ -126,7 +126,7 @@ actor {
         let uuid = UUID.toText(await g.new());
         let newUser : User = {
             name = name;
-            principal = null;
+            principal = "";
         };
         db_users.put(uuid, newUser);
         return (uuid, newUser);
@@ -135,11 +135,16 @@ actor {
     public shared (message) func assignUser(userKey: Text, token: Text) : async ?Text {
         let ?register = await getRegister(token);
         if (register.userKey == userKey) {
-            let user = await getUser(register.userKey);
+            let ?user = await getUser(register.userKey);
             let twentyFourHours : Time.Time = 24 * 60 * 60 * 1_000_000_000;
             if (Time.now() - register.timestamp < twentyFourHours) {
-                // user update Principal.toText(message.caller)
-                return ?"Principal";
+                let principal = Principal.toText(message.caller);
+                let updUser : User = {
+                    name = user.name;
+                    principal = principal;
+                };
+                ignore db_users.replace(register.userKey, updUser);
+                return ?principal;
             };
         };
         return null;
@@ -254,7 +259,7 @@ actor {
         switch (key) {
             case (null) { };
             case (?text) { db_users_groups.delete(text) };
-        }
+        };
     };
 
     /*** Database for BOARDS in GROUPS ***/
@@ -290,7 +295,7 @@ actor {
                 group = groupKey;
             };
             db_boards_groups.put(uuid, newBoardGroup);            
-        }
+        };
     };
 
     public shared (message) func delBoardFromGroup(boardKey: Text, groupKey: Text) : async () {
@@ -298,7 +303,7 @@ actor {
         switch (key) {
             case (null) { };
             case (?text) { db_boards_groups.delete(text) };
-        }
+        };
     };
 
 };

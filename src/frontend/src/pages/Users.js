@@ -95,7 +95,9 @@ export class PageUsers extends Component {
             id: 'register-user',
             name: '🔗 Generate register link',
             onClick: async () => {
+                this.app.spinner.show();
                 const token = await this.app.actor.addRegister(this.selected.id);
+                this.app.spinner.hide();
                 alert(`Link to register user ${this.selected.name}: ${this.app.getFrontendURL()}/auth/register/?user=${this.selected.id}&token=${token}`);
             }
         });
