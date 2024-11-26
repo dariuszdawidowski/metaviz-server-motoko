@@ -1,12 +1,13 @@
 import Text "mo:base/Text";
 import Iter "mo:base/Iter";
 import Array "mo:base/Array";
+import Buffer "mo:base/Buffer";
 import HashMap "mo:base/HashMap";
 import Principal "mo:base/Principal";
 import Source "mo:uuid/async/SourceV4";
 import UUID "mo:uuid/UUID";
 import Time "mo:base/Time";
-// import Debug "mo:base/Debug";
+import Debug "mo:base/Debug";
 
 
 actor {
@@ -80,10 +81,21 @@ actor {
 
     let db_boards = HashMap.HashMap<Text, Board>(0, Text.equal, Text.hash);
 
-    public query (message) func getBoards() : async [(Text, Board)] {
+    public shared (message) func getBoards() : async [(Text, Board)] {
         let user_boards = HashMap.HashMap<Text, Board>(0, Text.equal, Text.hash);
-        for ((key, value) in db_boards.entries()) {
-            user_boards.put(key, value);
+        let user_id = await getUserIdByPrincipal(Principal.toText(message.caller));
+        switch (user_id) {
+            case (null) { };
+            case (?id) {
+                let user_groups = await getUserGroups(id);
+                // Debug.print("Groups" # debug_show(user_groups));
+                for ((boardKey, boardValue) in db_boards.entries()) {
+                    for (groupKey in user_groups.vals()) {
+                        let is_in_group = await getBoardInGroup(boardKey, groupKey);
+                        if (is_in_group != null) user_boards.put(boardKey, boardValue);
+                    };
+                };
+            };
         };
         return Iter.toArray<(Text, Board)>(user_boards.entries());
     };
@@ -124,6 +136,13 @@ actor {
 
     public query (message) func getUser(key: Text) : async ?User {
         return db_users.get(key);
+    };
+
+    public query (message) func getUserIdByPrincipal(principal: Text) : async ?Text {
+        for ((key, value) in db_users.entries()) {
+            if (value.principal == principal) return ?key;
+        };
+        return null;
     };
 
     public shared (message) func addUser(name: Text) : async (Text, User) {
@@ -238,11 +257,19 @@ actor {
 
     public query (message) func getUserInGroup(userKey: Text, groupKey: Text) : async ?Text {
         for ((key, value) in db_users_groups.entries()) {
-            if (value.user == userKey and value.group == groupKey) {
-                return ?key;
-            }
+            if (value.user == userKey and value.group == groupKey) return ?key;
         };
         return null;
+    };
+
+    public query func getUserGroups(userKey: Text) : async [Text] {
+        let groups = Buffer.Buffer<Text>(0);
+        for ((key, value) in db_users_groups.entries()) {
+            if (value.user == userKey) {
+                groups.add(value.group);
+            }
+        };
+        return Buffer.toArray(groups);
     };
 
     public shared (message) func addUserToGroup(userKey: Text, groupKey: Text) : async () {
