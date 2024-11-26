@@ -1,5 +1,6 @@
 import Text "mo:base/Text";
 import Iter "mo:base/Iter";
+import Array "mo:base/Array";
 import HashMap "mo:base/HashMap";
 import Principal "mo:base/Principal";
 import Source "mo:uuid/async/SourceV4";
@@ -80,7 +81,11 @@ actor {
     let db_boards = HashMap.HashMap<Text, Board>(0, Text.equal, Text.hash);
 
     public query (message) func getBoards() : async [(Text, Board)] {
-        return Iter.toArray<(Text, Board)>(db_boards.entries());
+        let user_boards = HashMap.HashMap<Text, Board>(0, Text.equal, Text.hash);
+        for ((key, value) in db_boards.entries()) {
+            user_boards.put(key, value);
+        };
+        return Iter.toArray<(Text, Board)>(user_boards.entries());
     };
 
     public query (message) func getBoard(key: Text) : async ?Board {
