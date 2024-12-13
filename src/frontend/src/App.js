@@ -6,6 +6,7 @@ import { createActor, backend } from 'declarations/backend';
 import { Router } from 'frontend/src/utils/Router.js';
 import { Spinner } from 'frontend/src/widgets/Spinner.js';
 import { Dashboard } from 'frontend/src/pages/Dashboard.js';
+import { Editor } from 'frontend/src/pages/Editor.js';
 import { PageLogin } from 'frontend/src/pages/Login.js';
 import { PageRegister } from 'frontend/src/pages/Register.js';
 import { Page404 } from 'frontend/src/pages/404.js';
@@ -19,6 +20,7 @@ export default class MetavizApp extends Router {
         // Main elements
         this.main = document.querySelector('#app');
         this.dashboard = null;
+        this.editor = null;
 
         // IC connection
         this.actor = backend;
@@ -79,6 +81,14 @@ export default class MetavizApp extends Router {
             }
             this.page(this.dashboard);
             this.dashboard.set(path);
+        }
+
+        // Metaviz editor
+        else if (path.startsWith('/editor/')) {
+            if (!this.editor) {
+                this.editor = new Editor({app: this});
+            }
+            this.page(this.editor);
         }
 
         // 404

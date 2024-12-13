@@ -27,7 +27,6 @@ Add custom variables after # END DFX CANISTER ENVIRONMENT VARIABLES in the .env 
 
 ```bash
 CANISTER_PORT=8080
-METAVIZ_LIBS='local' # 'local' for ./src/frontend/lib/* | 'cdn' for load from internet
 METAVIZ_DEMO='true' # 'true' behave as public demo | 'false'
 ```
 
