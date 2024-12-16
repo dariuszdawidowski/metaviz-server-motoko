@@ -141,7 +141,6 @@ export default class MetavizApp extends Router {
     async assignII(userId, token) {
         this.spinner.show();
         const principal = await this.actor.assignUser(userId, token);
-        console.log(principal);
         this.spinner.hide();
     }
 
