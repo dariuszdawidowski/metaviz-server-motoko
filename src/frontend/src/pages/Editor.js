@@ -1,5 +1,5 @@
-import { Component } from 'frontend/src/utils/Component.js';
-import { MetavizClientIC } from 'frontend/src/metaviz-client-ic/app/metaviz-client-ic.js';
+import { Component } from '/src/utils/Component.js';
+import { MetavizClientIC } from '/src/metaviz-client-ic/app/metaviz-client-ic.js';
 
 export class Editor extends Component {
 
@@ -8,7 +8,7 @@ export class Editor extends Component {
 
         this.app.innerHTML = '';
 
-        const metaviz = new MetavizClientIC();
+        metaviz = new MetavizClientIC();
         metaviz.build = document.querySelector('meta[name="metaviz:build:version"]')?.content;
         global.cache['MetavizNodeImage'] = {
             formats: ['image/jpeg', 'image/png', 'image/apng', 'image/gif', 'image/webp', 'image/x-icon', 'image/svg+xml'],

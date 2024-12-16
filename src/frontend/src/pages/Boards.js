@@ -1,10 +1,9 @@
-import { Component } from 'frontend/src/utils/Component.js';
-import { Addbox } from 'frontend/src/widgets/Addbox.js';
-import { Box } from 'frontend/src/widgets/Box.js';
-import { BoardIcon } from 'frontend/src/widgets/BoardIcon.js';
-import { Container } from 'frontend/src/widgets/Container.js';
-import { Topbar } from 'frontend/src/widgets/Topbar.js';
-
+import { Component } from '/src/utils/Component.js';
+import { Addbox } from '/src/widgets/Addbox.js';
+import { Box } from '/src/widgets/Box.js';
+import { BoardIcon } from '/src/widgets/BoardIcon.js';
+import { Container } from '/src/widgets/Container.js';
+import { Topbar } from '/src/widgets/Topbar.js';
 
 export class PageBoards extends Component {
 
