@@ -8,7 +8,7 @@ import UUID "mo:uuid/UUID";
 import Time "mo:base/Time";
 import Map "mo:map/Map";
 import { thash } "mo:map/Map";
-// import Debug "mo:base/Debug";
+import Debug "mo:base/Debug";
 
 
 actor {
@@ -87,6 +87,21 @@ actor {
 
     /*** Database for BOARDS ***/
 
+    // Boards diagram data
+    stable let db_boards_data = Map.new<Text, Blob>();
+
+    public query (msg) func getBoardData(key: Text) : async ?Text {
+        // Anonymous
+        if (Principal.isAnonymous(msg.caller)) return null;
+        // User
+        let blob = Map.get(db_boards_data, thash, key);
+        switch (blob) {
+            case (null) { return null; };
+            case (?b) { return Text.decodeUtf8(b); };
+        };         
+    };
+
+    // Boards registry
     type Board = {
         name: Text;
         categoryKey: Text;

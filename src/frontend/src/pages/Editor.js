@@ -5,10 +5,7 @@ export class Editor extends Component {
 
     constructor(args) {
         super(args);
-
-        this.app.innerHTML = '';
-
-        metaviz = new MetavizClientIC();
+        metaviz = new MetavizClientIC(args.app);
         metaviz.build = document.querySelector('meta[name="metaviz:build:version"]')?.content;
         global.cache['MetavizNodeImage'] = {
             formats: ['image/jpeg', 'image/png', 'image/apng', 'image/gif', 'image/webp', 'image/x-icon', 'image/svg+xml'],
@@ -20,7 +17,7 @@ export class Editor extends Component {
             maxSize: 32 * 1024 * 1024 // 32 MB (max dropped image file size)
         };
         if (metaviz.compatibilityTest()) {
-            metaviz.init('app', 'metaviz-spinner');
+            metaviz.init('metaviz-diagram', 'metaviz-spinner');
             metaviz.start();
         }
         else {

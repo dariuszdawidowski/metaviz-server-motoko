@@ -4,10 +4,13 @@ import MetavizContextMenuIC from './menu.js';
 
 class MetavizEditorIC extends MetavizEditorBrowser {
 
-    constructor(args) {
+    constructor(app) {
 
         // Viewer constructor (also init events)
-        super(args);
+        super();
+
+        // App reference
+        this.app = app;
 
         // Get Board ID from URL param
         const getParams = window.location.search.uriToDict();
@@ -31,7 +34,18 @@ class MetavizEditorIC extends MetavizEditorBrowser {
 
             this.busy();
 
-            // TODO: Read board data
+            // Read board data
+            const data = await this.app.actor.getBoardData(this.id);
+            console.log('open', data);
+            if (data.length > 0) {
+            }
+            else {
+                this.idle();
+                this.checkEmpty();
+                metaviz.render.focusBounds();
+                metaviz.render.update();
+                metaviz.events.call('on:loaded');
+            }
 
 /*
             if (doc) {

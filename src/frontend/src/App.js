@@ -3,13 +3,13 @@ import { HttpAgent } from '@dfinity/agent';
 
 import { createActor, backend } from 'declarations/backend';
 
-import { Router } from 'frontend/src/utils/Router.js';
-import { Spinner } from 'frontend/src/widgets/Spinner.js';
-import { Dashboard } from 'frontend/src/pages/Dashboard.js';
-import { Editor } from 'frontend/src/pages/Editor.js';
-import { PageLogin } from 'frontend/src/pages/Login.js';
-import { PageRegister } from 'frontend/src/pages/Register.js';
-import { Page404 } from 'frontend/src/pages/404.js';
+import { Router } from '/src/utils/Router.js';
+import { Spinner } from '/src/widgets/Spinner.js';
+import { Dashboard } from '/src/pages/Dashboard.js';
+import { Editor } from '/src/pages/Editor.js';
+import { PageLogin } from '/src/pages/Login.js';
+import { PageRegister } from '/src/pages/Register.js';
+import { Page404 } from '/src/pages/404.js';
 
 
 export default class MetavizApp extends Router {
@@ -18,7 +18,7 @@ export default class MetavizApp extends Router {
         super();
 
         // Main elements
-        this.main = document.querySelector('#app');
+        this.main = document.querySelector('#metaviz-diagram');
         this.dashboard = null;
         this.editor = null;
 
@@ -44,7 +44,7 @@ export default class MetavizApp extends Router {
         /* Redirect */
 
         // Login
-        if (!this.isLoggedIn()) {
+        if (!this.isLoggedIn() && path != '/auth/login/') {
             path = '/auth/login/';
             window.history.replaceState({}, '', path);
         }

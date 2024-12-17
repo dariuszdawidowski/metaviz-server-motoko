@@ -9,8 +9,11 @@ export class MetavizClientIC extends Metaviz {
      * Constructor
      */
 
-    constructor() {
+    constructor(app) {
         super();
+
+        // App reference
+        this.app = app;
 
         // Data URL
         this.url['data'] = null;
@@ -59,7 +62,7 @@ export class MetavizClientIC extends Metaviz {
         });
         this.exchange = new MetavizExchangeIC();
         this.events = new MetavizEventManager();
-        this.editor = new MetavizEditorIC();
+        this.editor = new MetavizEditorIC(this.app);
     }
 
     /**

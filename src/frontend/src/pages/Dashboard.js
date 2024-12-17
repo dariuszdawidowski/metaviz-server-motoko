@@ -1,9 +1,9 @@
-import { Component } from 'frontend/src/utils/Component.js';
-import { PageBoards } from 'frontend/src/pages/Boards.js';
-import { PageGroups } from 'frontend/src/pages/Groups.js';
-import { PageUsers } from 'frontend/src/pages/Users.js';
-import { Page404 } from 'frontend/src/pages/404.js';
-import { Sidebar } from 'frontend/src/widgets/Sidebar.js'
+import { Component } from '/src/utils/Component.js';
+import { PageBoards } from '/src/pages/Boards.js';
+import { PageGroups } from '/src/pages/Groups.js';
+import { PageUsers } from '/src/pages/Users.js';
+import { Page404 } from '/src/pages/404.js';
+import { Sidebar } from '/src/widgets/Sidebar.js'
 
 
 export class Dashboard extends Component {

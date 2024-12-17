@@ -30,6 +30,18 @@ CANISTER_PORT=8080
 METAVIZ_DEMO='true' # 'true' behave as public demo | 'false'
 ```
 
+## Assign Admin
+
+To assign an admin, you need to set the admin as a controller. Controllers have the authority to manage canisters and perform administrative tasks. You can add a user as a controller using the following commands:
+
+```bash
+dfx canister update-settings frontend --add-controller <principal id>
+dfx canister update-settings backend --add-controller <principal id>
+```
+
+Replace `<principal id>` with the principal ID of the user you want to assign as an admin.
+
+
 ## 🐞 Troubleshooting on macOS
 
 If you encounter an error related to 'esbuild' - run dfx in the terminal using Rosetta x86 compatibility mode.
