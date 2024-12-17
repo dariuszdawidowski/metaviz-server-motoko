@@ -24,7 +24,7 @@ export default class MetavizApp extends Router {
 
         // IC connection
         this.actor = backend;
-        this.authClient = null;
+        this.auth = null;
         this.identity = null;
         this.agent = null;
 
@@ -32,7 +32,7 @@ export default class MetavizApp extends Router {
         this.spinner = new Spinner();
 
         // Authorize and trigger the router first time
-        this.auth().then(() => window.dispatchEvent(new Event('urlchange')));
+        this.authorize().then(() => window.dispatchEvent(new Event('urlchange')));
     }
 
     /**
@@ -44,7 +44,7 @@ export default class MetavizApp extends Router {
         /* Redirect */
 
         // Login
-        if (!this.isLoggedIn() && path == '/') {
+        if (!this.isLoggedIn()) {
             path = '/auth/login/';
             window.history.replaceState({}, '', path);
         }
@@ -121,9 +121,9 @@ export default class MetavizApp extends Router {
      * Authorize
      */
 
-    async auth() {
-        this.authClient = await AuthClient.create();
-        if (await this.authClient.isAuthenticated()) {
+    async authorize() {
+        this.auth = await AuthClient.create();
+        if (await this.auth.isAuthenticated()) {
             await this.loggedII();
         }
     }
@@ -133,7 +133,7 @@ export default class MetavizApp extends Router {
      */
 
     isLoggedIn() {
-        return (this.identity && this.agent && this.actor);
+        return this.auth && this.auth.getIdentity() && !this.auth.getIdentity().getPrincipal().isAnonymous();
     }
 
     /*** Internet Identity ***/
@@ -146,7 +146,7 @@ export default class MetavizApp extends Router {
 
     async loginII() {
         await new Promise((resolve) => {
-            this.authClient.login({
+            this.auth.login({
                 identityProvider: this.getIIURL(),
                 onSuccess: resolve,
             });
@@ -154,13 +154,13 @@ export default class MetavizApp extends Router {
     }
 
     async loggedII() {
-        this.identity = this.authClient.getIdentity();
+        this.identity = this.auth.getIdentity();
         this.agent = await HttpAgent.create({ identity: this.identity });
         this.actor = createActor(process.env.CANISTER_ID_BACKEND, { agent: this.agent });
     }
 
     async logoutII() {
-        await this.authClient.logout();
+        await this.auth.logout();
     }
 
     aboutII() {
