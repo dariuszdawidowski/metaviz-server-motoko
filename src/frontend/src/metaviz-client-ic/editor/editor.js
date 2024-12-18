@@ -36,8 +36,31 @@ class MetavizEditorIC extends MetavizEditorBrowser {
 
             // Read board data
             const data = await this.app.actor.getBoardData(this.id);
-            console.log('open', data);
             if (data.length > 0) {
+
+                // Parse JSON
+                const json = JSON.parse(data[0]);
+
+                // Deserialize
+                metaviz.format.deserialize('text/metaviz+json', json);
+
+                // Ready
+                this.idle();
+
+                // Empty folder?
+                this.checkEmpty();
+
+                // Centre
+                metaviz.render.focusBounds();
+
+                // Launch start
+                for (const node of metaviz.render.nodes.get('*')) node.start();
+
+                // Update
+                metaviz.render.update();
+                
+                // Dispatch final event
+                metaviz.events.call('on:loaded');
             }
             else {
                 this.idle();
@@ -102,9 +125,10 @@ class MetavizEditorIC extends MetavizEditorBrowser {
 
         // Collect JSON data
         const json = metaviz.format.serialize('text/metaviz+json', metaviz.render.nodes.get('*'));
+        console.log('save', json);
 
         // Send
-        // TODO: SAVE BOARD DATA
+        await this.app.actor.setBoardData(this.id, JSON.stringify(json));
 
         // Purge old media files
         await this.purge();

@@ -90,6 +90,14 @@ actor {
     // Boards diagram data
     stable let db_boards_data = Map.new<Text, Blob>();
 
+    public shared (msg) func setBoardData(key: Text, data: Text) : async () {
+        // Anonymous
+        if (Principal.isAnonymous(msg.caller)) return;
+        // User
+        let blob = Text.encodeUtf8(data);
+        Map.set(db_boards_data, thash, key, blob);
+    };
+
     public query (msg) func getBoardData(key: Text) : async ?Text {
         // Anonymous
         if (Principal.isAnonymous(msg.caller)) return null;
