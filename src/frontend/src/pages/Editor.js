@@ -3,10 +3,12 @@ import { MetavizClientIC } from '/src/metaviz-client-ic/app/metaviz-client-ic.js
 
 export class Editor extends Component {
 
-    constructor(args) {
-        super(args);
-        /*
-        metaviz = new MetavizClientIC(args.app);
+    /**
+     * Initialize Metaviz
+     */
+
+    mount() {
+        metaviz = new MetavizClientIC(this.app);
         metaviz.build = document.querySelector('meta[name="metaviz:build:version"]')?.content;
         global.cache['MetavizNodeImage'] = {
             formats: ['image/jpeg', 'image/png', 'image/apng', 'image/gif', 'image/webp', 'image/x-icon', 'image/svg+xml'],
@@ -24,16 +26,6 @@ export class Editor extends Component {
         else {
             alert(_('Unsupported browser'));
         }
-        */
-    
-    }
-
-    /**
-     * Update DOM
-     */
-
-    update() {
-        console.log('Editor update');
     }
 
 }
