@@ -2,8 +2,7 @@
  * Widget: Icon to display an organization header
  */
 
-import { Component } from 'frontend/src/utils/Component.js';
-
+import { Component } from '/src/utils/Component.js';
 
 export class OrganizationIcon extends Component {
 

@@ -1,4 +1,4 @@
-import { Component } from 'frontend/src/utils/Component.js';
+import { Component } from '/src/utils/Component.js';
 
 
 export class Topbar extends Component {

@@ -22,7 +22,7 @@ export class PageUsers extends Component {
 
         // Fetch data
         this.fetch().then(() => {
-            this.build();
+            this.render();
             this.menu();
         });
     }
@@ -41,7 +41,7 @@ export class PageUsers extends Component {
      * Build components
      */
 
-    build() {
+    render() {
 
         // Topbar component
         this.topbar = new Topbar({text: `Administration of x users`});

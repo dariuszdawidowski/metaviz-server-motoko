@@ -5,6 +5,7 @@ export class Editor extends Component {
 
     constructor(args) {
         super(args);
+        /*
         metaviz = new MetavizClientIC(args.app);
         metaviz.build = document.querySelector('meta[name="metaviz:build:version"]')?.content;
         global.cache['MetavizNodeImage'] = {
@@ -23,7 +24,16 @@ export class Editor extends Component {
         else {
             alert(_('Unsupported browser'));
         }
+        */
     
+    }
+
+    /**
+     * Update DOM
+     */
+
+    update() {
+        console.log('Editor update');
     }
 
 }

@@ -2,7 +2,7 @@
  * Widget: Icon to display a user on the list
  */
 
-import { Component } from 'frontend/src/utils/Component.js';
+import { Component } from '/src/utils/Component.js';
 
 
 export class UserIcon extends Component {

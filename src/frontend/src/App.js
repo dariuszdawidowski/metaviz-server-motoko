@@ -56,13 +56,13 @@ export default class MetavizApp extends Router {
 
         // Login
         if (path == '/auth/login/') {
-            const login = new PageLogin({app: this});
+            const login = new PageLogin({ app: this });
             this.page(login);
         }
 
         // Register
         else if (path == '/auth/register/') {
-            const register = new PageRegister({app: this, user: params.user, token: params.token});
+            const register = new PageRegister({ app: this, user: params.user, token: params.token });
             this.page(register);
         }
 
@@ -74,7 +74,7 @@ export default class MetavizApp extends Router {
         // Dashboard
         else if (path.startsWith('/dashboard/')) {
             if (!this.dashboard) {
-                this.dashboard = new Dashboard({app: this});
+                this.dashboard = new Dashboard({ app: this });
             }
             this.page(this.dashboard);
             this.dashboard.set(path);
@@ -83,7 +83,7 @@ export default class MetavizApp extends Router {
         // Metaviz editor
         else if (path.startsWith('/editor/')) {
             if (!this.editor) {
-                this.editor = new Editor({app: this});
+                this.editor = new Editor({ app: this });
             }
             this.page(this.editor);
         }

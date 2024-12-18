@@ -6,14 +6,14 @@ export class PageSettings extends Component {
 
     constructor(args) {
         super(args);
-        this.build();
+        this.render();
     }
 
     /**
      * Build components
      */
 
-    build() {
+    render() {
 
         // Topbar component
         this.topbar = new Topbar({text: `User Principal ID: ${this.app.auth.getIdentity().getPrincipal()}`});

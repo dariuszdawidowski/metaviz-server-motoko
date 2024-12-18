@@ -1,5 +1,5 @@
 /**
- * Component v 0.7.4
+ * Component v 0.8.0
  * Minimalistic DOM component for JavaScript
  * Copyright (C) 2024 Dariusz Dawidowski
  * Licence: MIT
@@ -47,10 +47,28 @@ export class Component {
             this.element.id = args.id;
         }
 
+        // Use MutationObserver to detect when the element is added to the DOM
+        const observer = new MutationObserver((mutationsList, observer) => {
+            for (const mutation of mutationsList) {
+                if (mutation.type === 'childList') {
+                    for (const node of mutation.addedNodes) {
+                        if (node === this.element) {
+                            this.mount();
+                            this.update();
+                            observer.disconnect();
+                            break;
+                        }
+                    }
+                }
+            }
+        });
+        observer.observe(document.body, { childList: true, subtree: true });
+        
     }
 
     /**
      * Append child component
+     * @param component: child Component
      */
 
     append(component) {
@@ -59,11 +77,28 @@ export class Component {
 
     /**
      * Replace child component
+     * @param component: child Component
      */
 
     replace(component) {
         this.element.innerHTML = '';
         this.element.append(component.element);
+    }
+
+    /**
+     * On mount callback
+     */
+
+    mount() {
+        /* Override */
+    }
+
+    /**
+     * Update DOM
+     */
+
+    update() {
+        /* Override */
     }
 
 }

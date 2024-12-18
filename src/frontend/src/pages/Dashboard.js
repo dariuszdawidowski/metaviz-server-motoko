@@ -53,4 +53,18 @@ export class Dashboard extends Component {
         }
     }
 
+    /**
+     * Render DOM
+     */
+
+    render() {
+    }
+
+    /**
+     * Update DOM
+     */
+
+    update() {
+    }
+
 }
