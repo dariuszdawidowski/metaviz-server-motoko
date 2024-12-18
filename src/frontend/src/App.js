@@ -1,8 +1,6 @@
 import { AuthClient } from '@dfinity/auth-client';
 import { HttpAgent } from '@dfinity/agent';
-
 import { createActor, backend } from 'declarations/backend';
-
 import { Router } from '/src/utils/Router.js';
 import { Spinner } from '/src/widgets/Spinner.js';
 import { Dashboard } from '/src/pages/Dashboard.js';
@@ -10,7 +8,6 @@ import { Editor } from '/src/pages/Editor.js';
 import { PageLogin } from '/src/pages/Login.js';
 import { PageRegister } from '/src/pages/Register.js';
 import { Page404 } from '/src/pages/404.js';
-
 
 export default class MetavizApp extends Router {
 
@@ -31,8 +28,8 @@ export default class MetavizApp extends Router {
         // Spiner
         this.spinner = new Spinner();
 
-        // Authorize and trigger the router first time
-        this.authorize().then(() => window.dispatchEvent(new Event('urlchange')));
+        // Check active session and trigger the router first time
+        this.session().then(() => window.dispatchEvent(new Event('urlchange')));
     }
 
     /**
@@ -118,10 +115,10 @@ export default class MetavizApp extends Router {
     }
 
     /**
-     * Authorize
+     * Check active session
      */
 
-    async authorize() {
+    async session() {
         this.auth = await AuthClient.create();
         if (await this.auth.isAuthenticated()) {
             await this.loggedII();

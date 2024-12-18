@@ -1,7 +1,6 @@
 import { Component } from 'frontend/src/utils/Component.js';
 import { SidebarIcon } from 'frontend/src/widgets/SidebarIcon.js';
 
-
 export class Sidebar extends Component {
 
     constructor(args) {
@@ -13,21 +12,23 @@ export class Sidebar extends Component {
         this.page = {
             '/dashboard/boards/': new SidebarIcon({
                 app: args.app,
-                id: 'icon-page-boards',
                 icon: 'mdi mdi-bulletin-board',
                 url: '/dashboard/boards/'
             }),
             '/dashboard/users/': new SidebarIcon({
                 app: args.app,
-                id: 'icon-page-users',
                 icon: 'mdi mdi-account-multiple',
                 url: '/dashboard/users/'
             }),
             '/dashboard/groups/': new SidebarIcon({
                 app: args.app,
-                id: 'icon-page-groups',
                 icon: 'mdi mdi-shield-account',
                 url: '/dashboard/groups/'
+            }),
+            '/dashboard/settings/': new SidebarIcon({
+                app: args.app,
+                icon: 'mdi mdi-cog',
+                url: '/dashboard/settings/'
             }),
             '/auth/logout/': new SidebarIcon({
                 app: args.app,

@@ -2,9 +2,9 @@ import { Component } from '/src/utils/Component.js';
 import { PageBoards } from '/src/pages/Boards.js';
 import { PageGroups } from '/src/pages/Groups.js';
 import { PageUsers } from '/src/pages/Users.js';
+import { PageSettings } from '/src/pages/Settings.js';
 import { Page404 } from '/src/pages/404.js';
 import { Sidebar } from '/src/widgets/Sidebar.js'
-
 
 export class Dashboard extends Component {
 
@@ -43,7 +43,11 @@ export class Dashboard extends Component {
                 this.page = new PageGroups({app: this.app});
                 this.content.replace(this.page);
                 break;
-            default:
+            case '/dashboard/settings/':
+                this.page = new PageSettings({app: this.app});
+                this.content.replace(this.page);
+                break;
+                default:
                 this.page = new Page404({app: this.app});
                 this.content.replace(this.page);
         }
