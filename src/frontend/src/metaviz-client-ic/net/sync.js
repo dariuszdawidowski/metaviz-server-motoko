@@ -46,7 +46,10 @@ export default class MetavizSync {
 
         // New connection
         const protocol = location.protocol == 'http:' ? 'ws:' : 'wss:';
-        this.websocket = new WebSocket(`${protocol}//${window.location.host}${metaviz.url.sync}${metaviz.editor.id}/`);
+        // this.websocket = new WebSocket(`${protocol}//${window.location.host}${metaviz.url.sync}${metaviz.editor.id}/`);
+        // this.websocket = new WebSocket(`ws://localhost:8282/${metaviz.editor.id}/`);
+        this.websocket = new WebSocket(`ws://localhost:8282`);
+        // this.websocket = new WebSocket(`${process.env.GATEWAY_PROTOCOL}://${process.env.GATEWAY_HOST}:${process.env.GATEWAY_PORT}`);
 
         // AJAX Pull if reconnected
         if (reconnect) this.pull();

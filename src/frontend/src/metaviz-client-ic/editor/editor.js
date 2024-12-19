@@ -1,6 +1,8 @@
 // Editor
 
 import MetavizContextMenuIC from './menu.js';
+import MetavizHistorySync from './history.js';
+import MetavizSync from '../net/sync.js';
 
 class MetavizEditorIC extends MetavizEditorBrowser {
 
@@ -15,6 +17,12 @@ class MetavizEditorIC extends MetavizEditorBrowser {
         // Get Board ID from URL param
         const getParams = window.location.search.uriToDict();
         if ('board' in getParams) this.id = getParams.board;
+
+        // Overwrite history
+        this.history = new MetavizHistorySync();
+
+        // Network Data Synchronization
+        this.sync = new MetavizSync();
 
         // Create menu
         this.menu = new MetavizContextMenuIC({projectName: this.name});
@@ -43,6 +51,9 @@ class MetavizEditorIC extends MetavizEditorBrowser {
 
                 // Deserialize
                 metaviz.format.deserialize('text/metaviz+json', json);
+
+                // Connect to Websocket Sync Server
+                this.sync.connect();
 
                 // Ready
                 this.idle();
