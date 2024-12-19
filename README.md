@@ -4,7 +4,15 @@ Metaviz is a visual project collaboration workspace. Good for making diagrams, p
 
 ## 🎁 Project content
 
+### Backend
+
 This repository contains Metaviz backend for the [Internet Computer](https://internetcomputer.org/) web3 blockchain written in [Motoko](https://github.com/dfinity/motoko) language.
+
+### Gateway
+
+The gateway acts as an intermediary between the frontend and backend, facilitating real-time data exchange between users. It uses WebSockets to synchronize workgroups, ensuring that all participants have the most up-to-date information as they collaborate.
+
+### Frontend
 
 Frontend refers to the admin and user panel, the diagram editor itself and other libraries are loaded directly from the CDN to simplify deploying. If you want to review the source code of these libraries - see the References section below.
 
@@ -23,11 +31,16 @@ Frontend refers to the admin and user panel, the diagram editor itself and other
 
 ## 🔧 Setup .env
 
-Add custom variables after # END DFX CANISTER ENVIRONMENT VARIABLES in the .env file.
+Important: add custom variables after # END DFX CANISTER ENVIRONMENT VARIABLES in the .env file.
 
 ```bash
-CANISTER_PORT=8080
-METAVIZ_DEMO='true' # 'true' behave as public demo | 'false'
+CANISTER_HOST='localhost' # ICP replica host | 'https://icp-api.io' for ICP mainnet
+CANISTER_PORT=8080 # any for local replica | 80 for ICP mainnet
+GATEWAY_PROTOCOL='ws' # 'ws' | 'wss'
+GATEWAY_HOST='localhost' # address of the Gateway server
+GATEWAY_PORT=8282 # port of the Gateway server
+METAVIZ_MODE='demo' # 'demo' behave as a public demo | 'production' for official release
+METAVIZ_LIBS='local' # Metaviz engine dependency libraries 'local' | 'cdn'
 ```
 
 ## Assign Admin
@@ -40,7 +53,6 @@ dfx canister update-settings backend --add-controller <principal id>
 ```
 
 Replace `<principal id>` with the principal ID of the user you want to assign as an admin.
-
 
 ## 🐞 Troubleshooting on macOS
 
@@ -64,7 +76,7 @@ dfx stop
 dfx start
 ```
 
-## 🚚 Deploying the project locally
+## 🚚 Deploying the backend and frontend locally
 
 If you want to test your project locally, you can use the following command:
 
@@ -91,6 +103,16 @@ npm start
 
 Which will start a server at `http://localhost:8080`, proxying API requests to the replica at port 4943.
 
+## 🚚 Deploying the gateway locally
+
+Gateway is a separate web2 project and has to be launched separately.
+
+```bash
+cd src/gateway
+npm install
+npm run start
+```
+
 ### Note on frontend environment variables
 
 If you are hosting frontend code somewhere without using DFX, you may need to make one of the following adjustments to ensure your project does not fetch the root key in production:
@@ -102,12 +124,30 @@ If you are hosting frontend code somewhere without using DFX, you may need to ma
 
 ## 🚛 Deploy the project on the mainnet
 
+### Frontend and backend canisters
+
 ```bash
 # Make sure which identity do you use
 dfx identity use {name}
 
 # Deploy to mainnet
 dfx deploy --ic
+```
+
+### Gateway server
+
+Should be located on a web2 server with NodeJS installed.
+
+Example of the Apache configuration:
+
+```
+<VirtualHost *:8888>
+    ServerName gateway.exmple.com
+    ProxyPass / http://localhost:8080/
+    ProxyPassReverse / http://localhost:8080/
+    ErrorLog ${APACHE_LOG_DIR}gateway-example-error.log
+    CustomLog ${APACHE_LOG_DIR}/gateway-example-access.log combined
+</VirtualHost>
 ```
 
 ## 🔗 References

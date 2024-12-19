@@ -70,47 +70,6 @@ class MetavizEditorIC extends MetavizEditorBrowser {
                 metaviz.events.call('on:loaded');
             }
 
-/*
-            if (doc) {
-
-                // Set properties
-                this.setBoardName(doc.data.name);
-                this.category = doc.data.category;
-                this.version = doc.version;
-
-                // Deserialize json                
-                if (doc.data.json) {
-                    // If error - show alert
-                    if ('error' in doc.data.json) alert(doc.data.json.error);
-                    // Decode data
-                    else metaviz.format.deserialize('text/metaviz+json', doc.data.json);
-                }
-
-                // Ready
-                this.idle();
-
-                // Empty folder?
-                this.checkEmpty();
-
-                // Centre
-                metaviz.render.focusBounds();
-
-                // Launch start
-                for (const node of metaviz.render.nodes.get('*')) node.start();
-
-                // Update
-                metaviz.render.update();
-                
-                // Dispatch final event
-                metaviz.events.call('on:loaded');
-
-            }
-
-            else {
-                this.idle();
-                alert('This board does not exist! Check your URL.')
-            }
-*/
         }
     }
 

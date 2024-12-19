@@ -34,7 +34,7 @@ export default defineConfig({
       minify: true,
       inject: {
         data: {
-          mvlibs: process.env.METAVIZ_LIBS
+          METAVIZ_LIBS: process.env.METAVIZ_LIBS
         }
       },
     })

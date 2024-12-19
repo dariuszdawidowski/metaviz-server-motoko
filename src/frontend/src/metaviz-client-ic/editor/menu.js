@@ -1,3 +1,4 @@
+// Context menu
 
 export default class MetavizContextMenuIC extends MetavizContextMenu {
 

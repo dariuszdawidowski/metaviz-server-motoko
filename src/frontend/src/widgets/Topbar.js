@@ -15,7 +15,7 @@ export class Topbar extends Component {
             `
         });
 
-        if (process.env.METAVIZ_DEMO == 'true') {
+        if (process.env.METAVIZ_MODE == 'demo') {
             const demobar = document.createElement('div');
             demobar.classList.add('topbar');
             demobar.style.color = '#000';
