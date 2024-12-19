@@ -30,6 +30,7 @@ export default defineConfig({
     environment("all", { prefix: "CANISTER_" }),
     environment("all", { prefix: "DFX_" }),
     environment("all", { prefix: "METAVIZ_" }),
+    environment("all", { prefix: "GATEWAY_" }),
     createHtmlPlugin({
       minify: true,
       inject: {
