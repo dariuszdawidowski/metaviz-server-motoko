@@ -118,15 +118,8 @@ export default class MetavizHistorySync {
         }
 
         // Sync to server
-        if (metaviz.url.sync) {
-            metaviz.events.call('on:saving');
-            metaviz.editor.sync.send(args);
-        }
-
-        // Or mark dirty
-        else {
-            this.dirty = true;
-        }
+        metaviz.events.call('on:saving');
+        metaviz.editor.sync.send(args);
 
         // Push state
         this.history.push(args);
@@ -281,7 +274,7 @@ export default class MetavizHistorySync {
             this.restore(previous);
 
             // Send to server
-            if (metaviz.url.sync) metaviz.editor.sync.send(this.mirror(previous));
+            metaviz.editor.sync.send(this.mirror(previous));
 
             // Store for Redo
             this.future.push(this.mirror(previous));
@@ -339,7 +332,7 @@ export default class MetavizHistorySync {
             this.restore(next);
 
             // Send to server
-            if (metaviz.url.sync) metaviz.editor.sync.send(this.mirror(next));
+            metaviz.editor.sync.send(this.mirror(next));
 
             // Store for Undo
             this.history.push(this.mirror(next));

@@ -38,14 +38,13 @@ export default class MetavizSync {
      * (Re)connect websocket
      */
 
-    connect(reconnect=false) {
+    connect(reconnect = false) {
         logging.info('WS:CONNECT');
 
         // Close if exists
         if (this.websocket) this.websocket.close();
 
         // New connection
-        const protocol = location.protocol == 'http:' ? 'ws:' : 'wss:';
         this.websocket = new WebSocket(`${process.env.GATEWAY_PROTOCOL}://${process.env.GATEWAY_HOST}:${process.env.GATEWAY_PORT}/${metaviz.editor.id}/`);
 
         // AJAX Pull if reconnected
@@ -182,8 +181,8 @@ export default class MetavizSync {
                         metaviz.format.deserialize('text/metaviz+json', json);
 
                         // Render
-                        metaviz.render.layers.current.render();
-                        metaviz.render.layers.current.update();
+                        // metaviz.render.layers.current.render();
+                        // metaviz.render.layers.current.update();
 
                         // Launch start
                         for (const node of metaviz.render.nodes.get('*')) node.start();
@@ -214,7 +213,7 @@ export default class MetavizSync {
         json['board'] = {'id': metaviz.editor.id};
 
         // Layers
-        json['layer'] = {'id': metaviz.render.layers.current.id};
+        // json['layer'] = {'id': metaviz.render.layers.current.id};
 
         // Push to queue
         this.queue.add(json);
