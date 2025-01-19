@@ -40,12 +40,15 @@ GATEWAY_PROTOCOL='ws' # 'ws' | 'wss'
 GATEWAY_HOST='localhost' # address of the Gateway server
 GATEWAY_PORT=8282 # port of the Gateway server
 METAVIZ_MODE='demo' # 'demo' behave as a public demo | 'production' for official release
-METAVIZ_LIBS='local' # Metaviz engine dependency libraries 'local' | 'cdn'
+METAVIZ_LIBS='cdn' # Metaviz engine dependency libraries 'local' | 'cdn'
 ```
 
-## Assign Admin
+## 🔧 Setup .env
 
-To assign an admin, you need to set the admin as a controller. Controllers have the authority to manage canisters and perform administrative tasks. You can add a user as a controller using the following commands:
+
+## Assign Admin with Internet Identity
+
+On the application level - to assign an admin, you need to set the admin as a controller. Controllers have the authority to manage canisters and perform administrative tasks. You can add a user as a controller using the following commands:
 
 ```bash
 dfx canister update-settings frontend --add-controller <principal id>
@@ -103,14 +106,23 @@ npm start
 
 Which will start a server at `http://localhost:8080`, proxying API requests to the replica at port 4943.
 
-## 🚚 Deploying the gateway locally
+## 🚚 Deploying and running the gateway locally
 
-Gateway is a separate web2 project and has to be launched separately.
+Gateway is a separate web2 project and has to be launched separately. It doesn't build - just run directly as a NodeJS server.
 
 ```bash
 cd src/gateway
 npm install
 npm run start
+```
+
+## 🍽 Serve libs
+
+If you are hosting the libraries locally, you should serve them statically from the `frontend/lib` directory on port 8585.
+
+```bash
+cd src/frontend/lib
+python3 -m http.server 8585
 ```
 
 ### Note on frontend environment variables
