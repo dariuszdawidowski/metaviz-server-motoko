@@ -40,6 +40,7 @@ class MetavizEditorIC extends MetavizEditorBrowser {
 
         if (this.id) {
 
+            // Spinner
             this.busy();
 
             // Read board data
@@ -73,11 +74,25 @@ class MetavizEditorIC extends MetavizEditorBrowser {
                 // Dispatch final event
                 metaviz.events.call('on:loaded');
             }
+
+            // Empty board
             else {
+                // Connect to Websocket Sync Server
+                this.sync.connect();
+
+                // Ready
                 this.idle();
+
+                // Empty folder?
                 this.checkEmpty();
+
+                // Centre
                 metaviz.render.focusBounds();
+
+                // Update
                 metaviz.render.update();
+
+                // Dispatch final event
                 metaviz.events.call('on:loaded');
             }
 

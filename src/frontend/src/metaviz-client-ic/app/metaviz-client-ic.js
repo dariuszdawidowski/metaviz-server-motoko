@@ -67,10 +67,9 @@ export class MetavizClientIC extends Metaviz {
 
     /**
      * Start everything
-     * @param boardID: optional string with uuid of the board to fetch (also can be passed in url get param)
      */
 
-    start(boardID = null) {
+    start() {
 
         // Start editor
         this.editor.start();
@@ -92,7 +91,7 @@ export class MetavizClientIC extends Metaviz {
         });
 
         // Initial load board json data
-        this.editor.open(boardID);
+        this.editor.open();
 
     }
 

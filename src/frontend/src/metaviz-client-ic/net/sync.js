@@ -227,34 +227,36 @@ export default class MetavizSync {
      */
 
     flush(debug) {
-        // Send data chunk to sync
-        switch (this.websocket.readyState) {
-            // 0 = Connecting
-            case 0:
-                // Do nothing - data is queued
-                logging.info('WS:readyState 0');
-                break;
+        if (this.websocket) {
+            // Send data chunk to sync
+            switch (this.websocket.readyState) {
+                // 0 = Connecting
+                case 0:
+                    // Do nothing - data is queued
+                    logging.info('WS:readyState 0');
+                    break;
 
-            // 1 = Open
-            case 1:
-                logging.info('WS:readyState 1');
-                for (const data of this.queue.get()) {
-                    logging.info(`${debug}`, data);
-                    this.websocket.send(JSON.stringify(data));
-                }
-                break;
+                // 1 = Open
+                case 1:
+                    logging.info('WS:readyState 1');
+                    for (const data of this.queue.get()) {
+                        logging.info(`${debug}`, data);
+                        this.websocket.send(JSON.stringify(data));
+                    }
+                    break;
 
-            // 2 = Closing
-            case 2:
-                // Callback reconnects closed websocket
-                logging.info('WS:readyState 2');
-                break;
+                // 2 = Closing
+                case 2:
+                    // Callback reconnects closed websocket
+                    logging.info('WS:readyState 2');
+                    break;
 
-            // 3 = Closed
-            case 3:
-                // Callback reconnects closed websocket
-                logging.info('WS:readyState 3');
-                break;
+                // 3 = Closed
+                case 3:
+                    // Callback reconnects closed websocket
+                    logging.info('WS:readyState 3');
+                    break;
+            }
         }
     }
 
