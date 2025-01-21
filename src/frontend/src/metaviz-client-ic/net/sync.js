@@ -110,6 +110,7 @@ export default class MetavizSync {
 
     pull() {
         logging.info('AJX:Pulling changes...');
+        /*
         metaviz.ajax.in.recv({params: {'fetch': 'Pull', 'board': metaviz.editor.id, 'updated': this.updated}}).then(data => {
             if (data != 'error') {
                 // JSON Data
@@ -135,7 +136,7 @@ export default class MetavizSync {
             else {
                 logging.info('AJX:Pulling connection error');
             }
-        });
+        });*/
     }
 
     /**
@@ -211,6 +212,9 @@ export default class MetavizSync {
 
         // Board
         json['board'] = {'id': metaviz.editor.id};
+
+        // Save
+        metaviz.editor.save();
 
         // Layers
         // json['layer'] = {'id': metaviz.render.layers.current.id};

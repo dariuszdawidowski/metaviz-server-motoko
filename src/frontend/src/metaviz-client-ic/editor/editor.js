@@ -106,7 +106,7 @@ class MetavizEditorIC extends MetavizEditorBrowser {
     async save() {
 
         // Spinner
-        this.busy();
+        // this.busy();
 
         // Collect JSON data
         const json = metaviz.format.serialize('text/metaviz+json', metaviz.render.nodes.get('*'));
@@ -116,13 +116,13 @@ class MetavizEditorIC extends MetavizEditorBrowser {
         await this.app.actor.setBoardData(this.id, JSON.stringify(json));
 
         // Purge old media files
-        await this.purge();
+        // await this.purge();
 
         // Clear
-        this.history.dirty = false;
+        // this.history.dirty = false;
 
         // Spinner
-        this.idle();
+        // this.idle();
 
     }
 
@@ -197,7 +197,7 @@ class MetavizEditorIC extends MetavizEditorBrowser {
         // Store
         this.history.clearFuture();
         this.history.store({action: 'add', nodes: [newNode.serialize('transform')]});
-
+        
         // Link if node chaining is active
         if (this.interaction.chainNode) {
             this.dragLinkEnd(newNode);

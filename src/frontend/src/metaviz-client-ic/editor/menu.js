@@ -172,16 +172,16 @@ export default class MetavizContextMenuIC extends MetavizContextMenu {
         }));
 
         // Save
-        this.panel.left.add(new TotalProMenuOption({
-            id: 'menu-file-save',
-            icon: '<span class="mdi mdi-content-save"></span>',
-            text: _('Save'),
-            shortcut: [17, 83],
-            onChange: () => {
-                this.hide();
-                if (metaviz.editor.history.isDirty()) metaviz.editor.save();
-            }
-        }));
+        // this.panel.left.add(new TotalProMenuOption({
+        //     id: 'menu-file-save',
+        //     icon: '<span class="mdi mdi-content-save"></span>',
+        //     text: _('Save'),
+        //     shortcut: [17, 83],
+        //     onChange: () => {
+        //         this.hide();
+        //         if (metaviz.editor.history.isDirty()) metaviz.editor.save();
+        //     }
+        // }));
 
         // ----
         this.panel.left.add(new TotalProMenuSeparator());
